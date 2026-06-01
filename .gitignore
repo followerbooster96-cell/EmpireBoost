@@ -1,1 +1,7 @@
+client/.env
+server/.env
+.env
+*/.env
 .vercel
+client/.vercel
+server/.vercel
