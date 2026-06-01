@@ -2,6 +2,14 @@ client/.env
 server/.env
 .env
 */.env
+
+node_modules/
+client/node_modules/
+server/node_modules/
+
 .vercel
 client/.vercel
 server/.vercel
+
+dist/
+client/dist/
