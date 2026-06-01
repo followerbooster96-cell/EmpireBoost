@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   Link,
+  Navigate,
   NavLink,
   Route,
   Routes,
@@ -92,25 +93,16 @@ function getStoredUser() {
   }
 }
 
-function clampNumber(value, min, max) {
-  return Math.min(max, Math.max(min, value));
-}
-
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const navbarRef = useRef(null);
   const adminDropdownRef = useRef(null);
   const adminCloseTimerRef = useRef(null);
 
-  const lastScrollYRef = useRef(0);
-  const currentLiftRef = useRef(0);
-  const targetLiftRef = useRef(0);
-  const scrollFrameRef = useRef(null);
-  const animationFrameRef = useRef(null);
-
   const [adminOpen, setAdminOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [user, setUser] = useState(getStoredUser());
 
@@ -142,48 +134,6 @@ function App() {
     exchangeRateDate,
     exchangeRateSource
   );
-
-  const setMobileLift = (value) => {
-    const safeValue = clampNumber(value, 0, 178);
-
-    targetLiftRef.current = safeValue;
-
-    if (!animationFrameRef.current) {
-      animateMobileLift();
-    }
-  };
-
-  const animateMobileLift = () => {
-    const current = currentLiftRef.current;
-    const target = targetLiftRef.current;
-    const next = current + (target - current) * 0.18;
-
-    currentLiftRef.current = Math.abs(target - next) < 0.35 ? target : next;
-
-    if (navbarRef.current) {
-      navbarRef.current.style.setProperty(
-        "--mobile-topbar-lift",
-        `${currentLiftRef.current}px`
-      );
-
-      const fadeAmount = clampNumber(currentLiftRef.current / 178, 0, 1);
-      navbarRef.current.style.setProperty(
-        "--mobile-topbar-alpha",
-        `${1 - fadeAmount * 0.18}`
-      );
-
-      navbarRef.current.style.setProperty(
-        "--mobile-topbar-shadow",
-        `${1 - fadeAmount * 0.36}`
-      );
-    }
-
-    if (Math.abs(target - currentLiftRef.current) > 0.35) {
-      animationFrameRef.current = window.requestAnimationFrame(animateMobileLift);
-    } else {
-      animationFrameRef.current = null;
-    }
-  };
 
   const refreshUserFromStorage = () => {
     const nextToken = localStorage.getItem("token");
@@ -233,15 +183,11 @@ function App() {
   }, [location.pathname]);
 
   useEffect(() => {
-    lastScrollYRef.current = window.scrollY || 0;
-    currentLiftRef.current = 0;
-    targetLiftRef.current = 0;
+    setAdminOpen(false);
+    setMobileMenuOpen(false);
+    document.body.classList.remove("empireMobileMenuLocked");
 
-    if (navbarRef.current) {
-      navbarRef.current.style.setProperty("--mobile-topbar-lift", "0px");
-      navbarRef.current.style.setProperty("--mobile-topbar-alpha", "1");
-      navbarRef.current.style.setProperty("--mobile-topbar-shadow", "1");
-    }
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, [location.pathname]);
 
   useEffect(() => {
@@ -292,74 +238,6 @@ function App() {
     };
   }, []);
 
-  useEffect(() => {
-    lastScrollYRef.current = window.scrollY || 0;
-
-    const handleScroll = () => {
-      if (scrollFrameRef.current) return;
-
-      scrollFrameRef.current = window.requestAnimationFrame(() => {
-        const isMobile = window.innerWidth <= 760;
-        const currentY = window.scrollY || 0;
-        const previousY = lastScrollYRef.current;
-        const diff = currentY - previousY;
-
-        if (!isMobile) {
-          setMobileLift(0);
-          lastScrollYRef.current = currentY;
-          scrollFrameRef.current = null;
-          return;
-        }
-
-        if (currentY <= 8) {
-          setMobileLift(0);
-          lastScrollYRef.current = currentY;
-          scrollFrameRef.current = null;
-          return;
-        }
-
-        if (Math.abs(diff) >= 1) {
-          const nextTarget = clampNumber(
-            targetLiftRef.current + diff * 1.05,
-            0,
-            178
-          );
-
-          setMobileLift(nextTarget);
-
-          if (diff > 2) {
-            setAdminOpen(false);
-          }
-        }
-
-        lastScrollYRef.current = currentY;
-        scrollFrameRef.current = null;
-      });
-    };
-
-    const handleResize = () => {
-      if (window.innerWidth > 760) {
-        setMobileLift(0);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleResize);
-
-      if (scrollFrameRef.current) {
-        window.cancelAnimationFrame(scrollFrameRef.current);
-      }
-
-      if (animationFrameRef.current) {
-        window.cancelAnimationFrame(animationFrameRef.current);
-      }
-    };
-  }, []);
-
   const handleCurrencyChange = (event) => {
     const nextCurrency = saveStoredCurrency(event.target.value);
     setSelectedCurrency(nextCurrency);
@@ -377,8 +255,10 @@ function App() {
     setToken(null);
     setUser(null);
     setAdminOpen(false);
+    setMobileMenuOpen(false);
+    document.body.classList.remove("empireMobileMenuLocked");
 
-    navigate("/login");
+    navigate("/login", { replace: true });
   };
 
   const closeAdminDropdown = () => {
@@ -407,6 +287,30 @@ function App() {
     }, 180);
   };
 
+  const closeMobileMenu = () => {
+    setAdminOpen(false);
+    setMobileMenuOpen(false);
+    document.body.classList.remove("empireMobileMenuLocked");
+  };
+
+  const toggleMobileMenu = () => {
+    setAdminOpen(false);
+    setMobileMenuOpen((current) => !current);
+  };
+
+  const goToSupportOrLogin = (event) => {
+    event.preventDefault();
+
+    closeMobileMenu();
+
+    if (!isLoggedIn) {
+      navigate("/login", { replace: true });
+      return;
+    }
+
+    navigate("/support");
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -420,14 +324,20 @@ function App() {
     const handleEscape = (event) => {
       if (event.key === "Escape") {
         setAdminOpen(false);
+        setMobileMenuOpen(false);
+        document.body.classList.remove("empireMobileMenuLocked");
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside, {
+      passive: true,
+    });
     document.addEventListener("keydown", handleEscape);
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
       document.removeEventListener("keydown", handleEscape);
 
       if (adminCloseTimerRef.current) {
@@ -436,8 +346,29 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) {
+      document.body.classList.remove("empireMobileMenuLocked");
+      return;
+    }
+
+    document.body.classList.add("empireMobileMenuLocked");
+
+    return () => {
+      document.body.classList.remove("empireMobileMenuLocked");
+    };
+  }, [mobileMenuOpen]);
+
   const navLinkClass = ({ isActive }) =>
     isActive ? "navItem navItemActive" : "navItem";
+
+  const protectedSupportLinkClass = ({ isActive }) => {
+    if (!isLoggedIn) {
+      return "navItem";
+    }
+
+    return isActive ? "navItem navItemActive" : "navItem";
+  };
 
   const adminMenuStyle = adminOpen
     ? {
@@ -529,20 +460,20 @@ function App() {
       "0 0 18px rgba(56,189,248,0.12), inset 0 1px 0 rgba(255,255,255,0.12)",
   };
 
+  const appShellClass = [
+    "empireAppShell",
+    isLoggedIn ? "empireAppLoggedIn" : "empireAppGuest",
+    isAdmin ? "empireAppAdmin" : "",
+    mobileMenuOpen ? "mobileMenuIsOpen" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <div>
+    <div className={appShellClass}>
       <MobileTopbarStyles />
 
-      <nav
-        ref={navbarRef}
-        className="navbar premiumNavbar mobileCinemaTopbar"
-        style={{
-          overflow: "visible",
-          "--mobile-topbar-lift": "0px",
-          "--mobile-topbar-alpha": "1",
-          "--mobile-topbar-shadow": "1",
-        }}
-      >
+      <nav className="navbar premiumNavbar desktopNavbar">
         <div className="topbarFloatLayer" aria-hidden="true">
           {topbarFloatItems.map((item) => (
             <span
@@ -555,7 +486,7 @@ function App() {
           ))}
         </div>
 
-        <Link to="/" className="logo premiumLogo" onClick={closeAdminDropdown}>
+        <Link to="/" className="logo premiumLogo" onClick={closeMobileMenu}>
           <span className="logoImageWrap">
             <img
               src="/EmpireBoostLogo.png"
@@ -573,7 +504,7 @@ function App() {
               <Link
                 to="/wallet"
                 className="navBalancePill"
-                onClick={closeAdminDropdown}
+                onClick={closeMobileMenu}
                 title={`Real balance is stored in ${BASE_CURRENCY}. ${currencyRateText}`}
               >
                 <span className="navBalanceIcon">
@@ -657,68 +588,44 @@ function App() {
             </span>
           </div>
 
-          <NavLink
-            to="/services"
-            className={navLinkClass}
-            onClick={closeAdminDropdown}
-          >
+          <NavLink to="/services" className={navLinkClass}>
             <span className="navIcon">⚡</span>
             <span>{t.services}</span>
           </NavLink>
 
           {isLoggedIn && (
             <>
-              <NavLink
-                to="/dashboard"
-                className={navLinkClass}
-                onClick={closeAdminDropdown}
-              >
+              <NavLink to="/dashboard" className={navLinkClass}>
                 <span className="navIcon">◆</span>
                 <span>{t.dashboard}</span>
               </NavLink>
 
-              <NavLink
-                to="/wallet"
-                className={navLinkClass}
-                onClick={closeAdminDropdown}
-              >
+              <NavLink to="/wallet" className={navLinkClass}>
                 <span className="navIcon">◈</span>
                 <span>{t.wallet}</span>
               </NavLink>
 
-              <NavLink
-                to="/orders"
-                className={navLinkClass}
-                onClick={closeAdminDropdown}
-              >
+              <NavLink to="/orders" className={navLinkClass}>
                 <span className="navIcon">▣</span>
                 <span>{t.orders}</span>
               </NavLink>
 
-              <NavLink
-                to="/transactions"
-                className={navLinkClass}
-                onClick={closeAdminDropdown}
-              >
+              <NavLink to="/transactions" className={navLinkClass}>
                 <span className="navIcon">↗</span>
                 <span>{t.transactions}</span>
               </NavLink>
             </>
           )}
 
-          <NavLink
-            to="/faq"
-            className={navLinkClass}
-            onClick={closeAdminDropdown}
-          >
+          <NavLink to="/faq" className={navLinkClass}>
             <span className="navIcon">?</span>
             <span>{t.faq}</span>
           </NavLink>
 
           <NavLink
-            to="/support"
-            className={navLinkClass}
-            onClick={closeAdminDropdown}
+            to={isLoggedIn ? "/support" : "/login"}
+            className={protectedSupportLinkClass}
+            onClick={goToSupportOrLogin}
           >
             <span className="navIcon">✦</span>
             <span>{t.support}</span>
@@ -826,20 +733,12 @@ function App() {
 
           {!isLoggedIn ? (
             <div className="navAuthGroup">
-              <NavLink
-                to="/login"
-                className="navLoginButton"
-                onClick={closeAdminDropdown}
-              >
+              <NavLink to="/login" className="navLoginButton">
                 <span className="navIcon">→</span>
                 <span>{t.login}</span>
               </NavLink>
 
-              <NavLink
-                to="/register"
-                className="navRegisterButton"
-                onClick={closeAdminDropdown}
-              >
+              <NavLink to="/register" className="navRegisterButton">
                 <span className="navIcon">+</span>
                 <span>{t.register}</span>
               </NavLink>
@@ -852,6 +751,333 @@ function App() {
           )}
         </div>
       </nav>
+
+      <div className="mobileMenuDock">
+        <Link to="/" className="mobileMenuBrand" onClick={closeMobileMenu}>
+          <img src="/EmpireBoostLogo.png" alt="EmpireBoost logo" />
+          <span>EmpireBoost</span>
+        </Link>
+
+        {isLoggedIn && (
+          <Link
+            to="/wallet"
+            className="mobileMenuBalance"
+            onClick={closeMobileMenu}
+          >
+            {displayedBalance}
+          </Link>
+        )}
+
+        <button
+          className={`mobileMenuButton ${
+            mobileMenuOpen ? "mobileMenuButtonOpen" : ""
+          }`}
+          type="button"
+          onClick={toggleMobileMenu}
+          aria-label={
+            mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"
+          }
+          aria-expanded={mobileMenuOpen}
+        >
+          <span className="mobileMenuButtonIcon" aria-hidden="true">
+            <i></i>
+            <i></i>
+            <i></i>
+          </span>
+
+          <strong>{mobileMenuOpen ? "Close" : "Menu"}</strong>
+        </button>
+      </div>
+
+      <div
+        className={`mobileMenuBackdrop ${
+          mobileMenuOpen ? "mobileMenuBackdropOpen" : ""
+        }`}
+        onClick={closeMobileMenu}
+        aria-hidden="true"
+      />
+
+      <aside
+        className={`mobileMenuPanel ${
+          mobileMenuOpen ? "mobileMenuPanelOpen" : ""
+        }`}
+        aria-hidden={!mobileMenuOpen}
+      >
+        <div className="mobileMenuPanelGlow" aria-hidden="true" />
+
+        <div className="mobileMenuPanelHeader">
+          <div>
+            <span>Navigation</span>
+            <strong>EmpireBoost Control</strong>
+            <small>Choose your next move</small>
+          </div>
+
+          <button type="button" onClick={closeMobileMenu} aria-label="Close menu">
+            <span>×</span>
+          </button>
+        </div>
+
+        {isLoggedIn && (
+          <Link
+            to="/wallet"
+            className="mobileMenuWalletCard"
+            onClick={closeMobileMenu}
+            title={`Real balance is stored in ${BASE_CURRENCY}. ${currencyRateText}`}
+          >
+            <span>
+              {selectedCurrencyMeta.symbol === "CHF"
+                ? "₣"
+                : selectedCurrencyMeta.symbol === "RSD"
+                  ? "R"
+                  : selectedCurrencyMeta.symbol}
+            </span>
+
+            <div>
+              <small>{t.balance}</small>
+              <strong>{displayedBalance}</strong>
+            </div>
+          </Link>
+        )}
+
+        {isLoggedIn && (
+          <div className="mobileMenuSelectors">
+            <label>
+              <span className="mobileMenuSelectIcon">
+                <em>{selectedCurrencyMeta.flag}</em>
+              </span>
+
+              <select
+                value={selectedCurrency}
+                onChange={handleCurrencyChange}
+                aria-label="Select display currency"
+              >
+                {SUPPORTED_CURRENCIES.map((currency) => (
+                  <option key={currency.code} value={currency.code}>
+                    {currency.code}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label>
+              <span className="mobileMenuSelectIcon">
+                <em>{selectedLanguageMeta.flag}</em>
+              </span>
+
+              <select
+                value={selectedLanguage}
+                onChange={handleLanguageChange}
+                aria-label="Select website language"
+              >
+                {SUPPORTED_LANGUAGES.map((language) => (
+                  <option key={language.code} value={language.code}>
+                    {language.short}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        )}
+
+        <div className="mobileMenuLinks">
+          {!isLoggedIn && (
+            <label className="mobileMenuSelectPill">
+              <span className="mobileMenuSelectIcon">
+                <em>{selectedLanguageMeta.flag}</em>
+              </span>
+
+              <select
+                value={selectedLanguage}
+                onChange={handleLanguageChange}
+                aria-label="Select website language"
+              >
+                {SUPPORTED_LANGUAGES.map((language) => (
+                  <option key={language.code} value={language.code}>
+                    {language.short}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+
+          {!isLoggedIn && (
+            <NavLink to="/faq" className={navLinkClass} onClick={closeMobileMenu}>
+              <span className="navIcon">?</span>
+              <span>{t.faq}</span>
+            </NavLink>
+          )}
+
+          <NavLink to="/services" className={navLinkClass} onClick={closeMobileMenu}>
+            <span className="navIcon">⚡</span>
+            <span>{t.services}</span>
+          </NavLink>
+
+          <NavLink
+            to={isLoggedIn ? "/support" : "/login"}
+            className={protectedSupportLinkClass}
+            onClick={goToSupportOrLogin}
+          >
+            <span className="navIcon">✦</span>
+            <span>{t.support}</span>
+          </NavLink>
+
+          {isLoggedIn && (
+            <>
+              <NavLink
+                to="/dashboard"
+                className={navLinkClass}
+                onClick={closeMobileMenu}
+              >
+                <span className="navIcon">◆</span>
+                <span>{t.dashboard}</span>
+              </NavLink>
+
+              <NavLink
+                to="/wallet"
+                className={navLinkClass}
+                onClick={closeMobileMenu}
+              >
+                <span className="navIcon">◈</span>
+                <span>{t.wallet}</span>
+              </NavLink>
+
+              <NavLink
+                to="/orders"
+                className={navLinkClass}
+                onClick={closeMobileMenu}
+              >
+                <span className="navIcon">▣</span>
+                <span>{t.orders}</span>
+              </NavLink>
+
+              <NavLink
+                to="/transactions"
+                className={navLinkClass}
+                onClick={closeMobileMenu}
+              >
+                <span className="navIcon">↗</span>
+                <span>{t.transactions}</span>
+              </NavLink>
+
+              <NavLink to="/faq" className={navLinkClass} onClick={closeMobileMenu}>
+                <span className="navIcon">?</span>
+                <span>{t.faq}</span>
+              </NavLink>
+            </>
+          )}
+        </div>
+
+        {isLoggedIn && isAdmin && (
+          <div className="mobileMenuAdminBlock">
+            <span>Admin Area</span>
+
+            <div>
+              <NavLink
+                to="/admin/services"
+                className={navLinkClass}
+                onClick={closeMobileMenu}
+              >
+                <span className="navIcon">⚙</span>
+                <span>{t.adminServices}</span>
+              </NavLink>
+
+              <NavLink
+                to="/admin/orders"
+                className={navLinkClass}
+                onClick={closeMobileMenu}
+              >
+                <span className="navIcon">▣</span>
+                <span>{t.adminOrders}</span>
+              </NavLink>
+
+              <NavLink
+                to="/admin/users"
+                className={navLinkClass}
+                onClick={closeMobileMenu}
+              >
+                <span className="navIcon">◉</span>
+                <span>{t.adminUsers}</span>
+              </NavLink>
+
+              <NavLink
+                to="/admin/deposits"
+                className={navLinkClass}
+                onClick={closeMobileMenu}
+              >
+                <span className="navIcon">◆</span>
+                <span>{t.adminDeposits}</span>
+              </NavLink>
+
+              <NavLink
+                to="/admin/transactions"
+                className={navLinkClass}
+                onClick={closeMobileMenu}
+              >
+                <span className="navIcon">↗</span>
+                <span>{t.adminTransactions}</span>
+              </NavLink>
+
+              <NavLink
+                to="/admin/support"
+                className={navLinkClass}
+                onClick={closeMobileMenu}
+              >
+                <span className="navIcon">✦</span>
+                <span>{t.adminSupport}</span>
+              </NavLink>
+
+              <NavLink
+                to="/admin/promo-codes"
+                className={navLinkClass}
+                onClick={closeMobileMenu}
+              >
+                <span className="navIcon">%</span>
+                <span>{t.promoCodes}</span>
+              </NavLink>
+
+              <NavLink
+                to="/admin/settings"
+                className={navLinkClass}
+                onClick={closeMobileMenu}
+              >
+                <span className="navIcon">⚙</span>
+                <span>{t.settings}</span>
+              </NavLink>
+            </div>
+          </div>
+        )}
+
+        <div className="mobileMenuAuthArea">
+          {!isLoggedIn ? (
+            <>
+              <NavLink
+                to="/login"
+                className="navLoginButton"
+                onClick={closeMobileMenu}
+              >
+                <span className="navIcon">→</span>
+                <span>{t.login}</span>
+              </NavLink>
+
+              <NavLink
+                to="/register"
+                className="navRegisterButton"
+                onClick={closeMobileMenu}
+              >
+                <span className="navIcon">+</span>
+                <span>{t.register}</span>
+              </NavLink>
+            </>
+          ) : (
+            <button className="navLogoutButton" onClick={logout} type="button">
+              <span className="navIcon">×</span>
+              <span>{t.logout}</span>
+            </button>
+          )}
+        </div>
+      </aside>
+
+      <div className="mobileTopbarSpacer" aria-hidden="true" />
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -867,7 +1093,10 @@ function App() {
         <Route path="/orders" element={<Orders />} />
         <Route path="/transactions" element={<Transactions />} />
         <Route path="/faq" element={<FAQ />} />
-        <Route path="/support" element={<Support />} />
+        <Route
+          path="/support"
+          element={isLoggedIn ? <Support /> : <Navigate to="/login" replace />}
+        />
 
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
@@ -897,542 +1126,957 @@ function MobileTopbarStyles() {
   return (
     <style>
       {`
-        @media (min-width: 761px) {
-          .mobileCinemaTopbar {
-            transform: translateY(0) !important;
-          }
+        html {
+          overflow-x: hidden;
+          scroll-behavior: auto;
+        }
+
+        body {
+          overflow-x: hidden;
+          scroll-behavior: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .mobileTopbarSpacer,
+        .mobileMenuDock,
+        .mobileMenuBackdrop,
+        .mobileMenuPanel {
+          display: none;
+        }
+
+        body.empireMobileMenuLocked {
+          overflow: hidden !important;
+          touch-action: none !important;
         }
 
         @media (max-width: 760px) {
+          html,
+          body,
+          #root {
+            width: 100%;
+            min-height: 100%;
+            height: auto;
+            overflow-x: hidden;
+            overscroll-behavior-x: none;
+            -webkit-overflow-scrolling: touch;
+          }
+
           body {
-            scroll-behavior: auto !important;
+            position: static !important;
+            touch-action: auto !important;
           }
 
-          .mobileCinemaTopbar {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            z-index: 999999 !important;
-            width: 100% !important;
-            min-height: auto !important;
-            padding: 7px 8px 8px !important;
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            justify-content: flex-start !important;
-            gap: 5px !important;
-            overflow: hidden !important;
-            transform: translate3d(0, calc(var(--mobile-topbar-lift, 0px) * -1), 0) !important;
-            opacity: var(--mobile-topbar-alpha, 1) !important;
-            will-change: transform !important;
-            contain: layout paint style !important;
-            background:
-              radial-gradient(circle at 12% 0%, rgba(56, 189, 248, 0.18), transparent 38%),
-              radial-gradient(circle at 88% 10%, rgba(96, 165, 250, 0.14), transparent 38%),
-              linear-gradient(180deg, rgba(5, 12, 25, 0.988), rgba(3, 8, 18, 0.974)) !important;
-            border-bottom: 1px solid rgba(147, 197, 253, 0.15) !important;
-            box-shadow:
-              0 calc(14px * var(--mobile-topbar-shadow, 1)) calc(34px * var(--mobile-topbar-shadow, 1)) rgba(0, 0, 0, 0.42),
-              0 0 calc(26px * var(--mobile-topbar-shadow, 1)) rgba(37, 99, 235, 0.1),
-              inset 0 1px 0 rgba(255, 255, 255, 0.055) !important;
-            backdrop-filter: blur(18px) saturate(145%) !important;
-            -webkit-backdrop-filter: blur(18px) saturate(145%) !important;
+          .empireAppShell {
+            width: 100%;
+            min-height: 100%;
+            overflow-x: hidden;
+            overflow-y: visible;
           }
 
-          body:has(.mobileCinemaTopbar) {
-            padding-top: 154px !important;
-          }
-
-          .mobileCinemaTopbar::before {
-            opacity: 0.22 !important;
-          }
-
-          .mobileCinemaTopbar::after {
-            opacity: 0.12 !important;
-          }
-
-          .mobileCinemaTopbar .topbarFloatLayer {
-            display: block !important;
-            position: absolute !important;
-            inset: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            opacity: 0.42 !important;
-            overflow: hidden !important;
-            pointer-events: none !important;
-            z-index: 0 !important;
-            mask-image: linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%) !important;
-            -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%) !important;
-          }
-
-          .mobileCinemaTopbar .topbarFloatLayer::before {
+          .desktopNavbar {
             display: none !important;
           }
 
-          .mobileCinemaTopbar .topbarFloatItem {
-            position: absolute !important;
-            top: 50% !important;
-            left: 50% !important;
-            height: 22px !important;
-            padding: 4px 7px !important;
-            gap: 5px !important;
-            opacity: 0 !important;
-            border-radius: 999px !important;
-            border-color: rgba(147, 197, 253, 0.08) !important;
+          .mobileTopbarSpacer {
+            display: block;
+            height: 82px;
+            width: 100%;
+            flex: 0 0 auto;
+            pointer-events: none;
+          }
+
+          .mobileMenuDock {
+            position: fixed;
+            top: max(12px, calc(env(safe-area-inset-top) + 8px));
+            left: 50%;
+            z-index: 1000000;
+            width: min(382px, calc(100% - 20px));
+            min-height: 54px;
+            padding: 7px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto auto;
+            gap: 8px;
+            align-items: center;
+            border-radius: 999px;
+            overflow: hidden;
             background:
-              radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.1), transparent 42%),
-              linear-gradient(135deg, rgba(15, 23, 42, 0.36), rgba(2, 6, 23, 0.18)) !important;
+              radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.16), transparent 42%),
+              radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.2), transparent 46%),
+              radial-gradient(circle at 50% 120%, rgba(37, 99, 235, 0.18), transparent 44%),
+              linear-gradient(135deg, rgba(5, 12, 25, 0.97), rgba(3, 8, 18, 0.93));
+            border: 1px solid rgba(147, 197, 253, 0.22);
             box-shadow:
-              0 8px 18px rgba(0, 0, 0, 0.15),
-              0 0 12px rgba(96, 165, 250, 0.05),
-              inset 0 1px 0 rgba(255, 255, 255, 0.035) !important;
-            animation-name: mobileTopbarLivingFloat !important;
-            animation-timing-function: cubic-bezier(0.42, 0, 0.25, 1) !important;
-            animation-iteration-count: infinite !important;
+              0 18px 42px rgba(0, 0, 0, 0.44),
+              0 0 30px rgba(56, 189, 248, 0.15),
+              0 0 60px rgba(37, 99, 235, 0.08),
+              inset 0 1px 0 rgba(255, 255, 255, 0.09);
+            backdrop-filter: blur(16px) saturate(145%);
+            -webkit-backdrop-filter: blur(16px) saturate(145%);
+            transform: translate3d(-50%, 0, 0);
+            will-change: transform;
+            contain: paint;
           }
 
-          .mobileCinemaTopbar .topbarFloatItem b {
-            width: 15px !important;
-            height: 15px !important;
-            min-width: 15px !important;
-            font-size: 8px !important;
+          .mobileMenuDock::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+              linear-gradient(
+                110deg,
+                transparent 0%,
+                transparent 32%,
+                rgba(255, 255, 255, 0.11) 45%,
+                rgba(56, 189, 248, 0.12) 50%,
+                transparent 64%,
+                transparent 100%
+              );
+            transform: translateX(-120%);
+            animation: mobileDockScan 5.6s ease-in-out infinite;
           }
 
-          .mobileCinemaTopbar .topbarFloatItem em {
-            font-size: 8px !important;
-            letter-spacing: 0.35px !important;
-            color: rgba(239, 246, 255, 0.52) !important;
+          .mobileMenuDock::after {
+            content: "";
+            position: absolute;
+            left: 20px;
+            right: 20px;
+            bottom: -1px;
+            height: 1px;
+            pointer-events: none;
+            background: linear-gradient(
+              90deg,
+              transparent,
+              rgba(96, 165, 250, 0.9),
+              rgba(255, 255, 255, 0.38),
+              rgba(14, 165, 233, 0.82),
+              transparent
+            );
+            opacity: 0.85;
+            filter: blur(0.2px);
           }
 
-          @keyframes mobileTopbarLivingFloat {
+          @keyframes mobileDockScan {
             0% {
+              transform: translateX(-125%);
               opacity: 0;
-              transform:
-                translate(-50%, -50%)
-                translate(var(--m-start-x), var(--m-start-y))
-                scale(0.62)
-                rotate(calc(var(--m-rot) * -1));
-              filter: blur(5px) brightness(0.38);
             }
 
-            15% {
-              opacity: 0.22;
-              filter: blur(2px) brightness(0.76);
+            18% {
+              opacity: 0.65;
             }
 
-            38% {
-              opacity: 0.48;
-              transform:
-                translate(-50%, -50%)
-                translate(
-                  calc(var(--m-start-x) * 0.35 + var(--m-wander-x)),
-                  calc(var(--m-start-y) * 0.35 + var(--m-wander-y))
-                )
-                scale(0.88)
-                rotate(var(--m-rot));
-              filter: blur(0.4px) brightness(0.96);
-            }
-
-            66% {
-              opacity: 0.31;
-              transform:
-                translate(-50%, -50%)
-                translate(
-                  calc(var(--m-end-x) * 0.45 + var(--m-wander2-x)),
-                  calc(var(--m-end-y) * 0.45 + var(--m-wander2-y))
-                )
-                scale(0.76)
-                rotate(calc(var(--m-rot) * 1.6));
-              filter: blur(1.7px) brightness(0.72);
+            42% {
+              opacity: 0.28;
             }
 
             100% {
+              transform: translateX(125%);
               opacity: 0;
-              transform:
-                translate(-50%, -50%)
-                translate(var(--m-end-x), var(--m-end-y))
-                scale(0.46)
-                rotate(calc(var(--m-rot) * 2.2));
-              filter: blur(6px) brightness(0.24);
             }
           }
 
-          .mobileCinemaTopbar .topbarFloatOne {
-            --m-start-x: -170px;
-            --m-start-y: -36px;
-            --m-wander-x: 28px;
-            --m-wander-y: 18px;
-            --m-wander2-x: -24px;
-            --m-wander2-y: -8px;
-            --m-end-x: 150px;
-            --m-end-y: 42px;
-            --m-rot: -8deg;
-            animation-duration: 18s !important;
-            animation-delay: -2s !important;
-          }
-
-          .mobileCinemaTopbar .topbarFloatTwo {
-            --m-start-x: 170px;
-            --m-start-y: -42px;
-            --m-wander-x: -32px;
-            --m-wander-y: 20px;
-            --m-wander2-x: 20px;
-            --m-wander2-y: -18px;
-            --m-end-x: -160px;
-            --m-end-y: 38px;
-            --m-rot: 7deg;
-            animation-duration: 21s !important;
-            animation-delay: -8s !important;
-          }
-
-          .mobileCinemaTopbar .topbarFloatThree {
-            --m-start-x: -190px;
-            --m-start-y: 12px;
-            --m-wander-x: 36px;
-            --m-wander-y: -19px;
-            --m-wander2-x: -18px;
-            --m-wander2-y: 23px;
-            --m-end-x: 175px;
-            --m-end-y: -30px;
-            --m-rot: 10deg;
-            animation-duration: 20s !important;
-            animation-delay: -13s !important;
-          }
-
-          .mobileCinemaTopbar .topbarFloatFour {
-            --m-start-x: 190px;
-            --m-start-y: 18px;
-            --m-wander-x: -28px;
-            --m-wander-y: -22px;
-            --m-wander2-x: 24px;
-            --m-wander2-y: 18px;
-            --m-end-x: -180px;
-            --m-end-y: -34px;
-            --m-rot: -10deg;
-            animation-duration: 23s !important;
-            animation-delay: -16s !important;
-          }
-
-          .mobileCinemaTopbar .topbarFloatFive {
-            --m-start-x: -145px;
-            --m-start-y: 44px;
-            --m-wander-x: 30px;
-            --m-wander-y: -28px;
-            --m-wander2-x: -30px;
-            --m-wander2-y: 14px;
-            --m-end-x: 130px;
-            --m-end-y: -46px;
-            --m-rot: 6deg;
-            animation-duration: 19s !important;
-            animation-delay: -5s !important;
-          }
-
-          .mobileCinemaTopbar .topbarFloatSix {
-            --m-start-x: 145px;
-            --m-start-y: 46px;
-            --m-wander-x: -24px;
-            --m-wander-y: -30px;
-            --m-wander2-x: 28px;
-            --m-wander2-y: 15px;
-            --m-end-x: -135px;
-            --m-end-y: -48px;
-            --m-rot: -6deg;
-            animation-duration: 22s !important;
-            animation-delay: -11s !important;
-          }
-
-          .mobileCinemaTopbar .topbarFloatSeven {
-            --m-start-x: -70px;
-            --m-start-y: -55px;
-            --m-wander-x: 36px;
-            --m-wander-y: 34px;
-            --m-wander2-x: -18px;
-            --m-wander2-y: -28px;
-            --m-end-x: 82px;
-            --m-end-y: 54px;
-            --m-rot: 8deg;
-            animation-duration: 24s !important;
-            animation-delay: -17s !important;
-          }
-
-          .mobileCinemaTopbar .topbarFloatEight {
-            --m-start-x: 82px;
-            --m-start-y: -54px;
-            --m-wander-x: -38px;
-            --m-wander-y: 30px;
-            --m-wander2-x: 20px;
-            --m-wander2-y: -26px;
-            --m-end-x: -92px;
-            --m-end-y: 52px;
-            --m-rot: -8deg;
-            animation-duration: 25s !important;
-            animation-delay: -20s !important;
-          }
-
-          .mobileCinemaTopbar .topbarFloatNine,
-          .mobileCinemaTopbar .topbarFloatTen,
-          .mobileCinemaTopbar .topbarFloatEleven,
-          .mobileCinemaTopbar .topbarFloatTwelve,
-          .mobileCinemaTopbar .topbarFloatThirteen,
-          .mobileCinemaTopbar .topbarFloatFourteen,
-          .mobileCinemaTopbar .topbarFloatFifteen,
-          .mobileCinemaTopbar .topbarFloatSixteen,
-          .mobileCinemaTopbar .topbarFloatSeventeen,
-          .mobileCinemaTopbar .topbarFloatEighteen,
-          .mobileCinemaTopbar .topbarFloatNineteen,
-          .mobileCinemaTopbar .topbarFloatTwenty {
-            display: none !important;
-          }
-
-          .mobileCinemaTopbar .premiumLogo,
-          .mobileCinemaTopbar .logo {
-            position: relative !important;
-            z-index: 3 !important;
-            width: 100% !important;
-            max-width: 310px !important;
-            height: 35px !important;
-            min-height: 35px !important;
-            padding: 0 8px !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            gap: 7px !important;
-            border-radius: 16px !important;
+          .mobileMenuBrand {
+            position: relative;
+            z-index: 2;
+            min-width: 0;
+            height: 40px;
+            padding: 0 12px 0 7px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 999px;
+            text-decoration: none;
+            color: #ffffff;
             background:
-              radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.08), transparent 42%),
-              linear-gradient(135deg, rgba(15, 23, 42, 0.58), rgba(2, 6, 23, 0.28)) !important;
-            border: 1px solid rgba(147, 197, 253, 0.11) !important;
+              radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.1), transparent 42%),
+              linear-gradient(135deg, rgba(15, 23, 42, 0.66), rgba(2, 6, 23, 0.38));
+            border: 1px solid rgba(147, 197, 253, 0.12);
+            overflow: hidden;
+          }
+
+          .mobileMenuBrand img {
+            width: 30px;
+            height: 30px;
+            min-width: 30px;
+            object-fit: contain;
+            border-radius: 999px;
+            filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.18));
+          }
+
+          .mobileMenuBrand span {
+            min-width: 0;
+            display: block;
+            color: #ffffff;
+            font-size: 12.5px;
+            font-weight: 950;
+            letter-spacing: 0.48px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-shadow:
+              0 0 14px rgba(255, 255, 255, 0.16),
+              0 0 22px rgba(56, 189, 248, 0.12);
+          }
+
+          .mobileMenuBalance {
+            position: relative;
+            z-index: 2;
+            height: 40px;
+            max-width: 98px;
+            padding: 0 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            text-decoration: none;
+            color: #eaf5ff;
+            font-size: 11px;
+            font-weight: 950;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background:
+              radial-gradient(circle at 25% 0%, rgba(255, 255, 255, 0.14), transparent 42%),
+              linear-gradient(135deg, rgba(37, 99, 235, 0.52), rgba(14, 165, 233, 0.18));
+            border: 1px solid rgba(147, 197, 253, 0.16);
             box-shadow:
-              0 9px 20px rgba(0, 0, 0, 0.2),
-              inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+              0 10px 24px rgba(0, 0, 0, 0.22),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08);
           }
 
-          .mobileCinemaTopbar .logoImageWrap {
-            width: 27px !important;
-            height: 27px !important;
-            min-width: 27px !important;
-            border-radius: 10px !important;
-          }
-
-          .mobileCinemaTopbar .logoImage {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: contain !important;
-          }
-
-          .mobileCinemaTopbar .logoText {
-            font-size: 13px !important;
-            line-height: 1 !important;
-            letter-spacing: 0.48px !important;
-            max-width: 175px !important;
-            overflow: hidden !important;
-            white-space: nowrap !important;
-            text-overflow: ellipsis !important;
-          }
-
-          .mobileCinemaTopbar .premiumNavlinks,
-          .mobileCinemaTopbar .navlinks {
-            position: relative !important;
-            z-index: 3 !important;
-            width: 100% !important;
-            max-width: 338px !important;
-            margin: 0 auto !important;
-            padding: 5px !important;
-            display: grid !important;
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-            align-items: center !important;
-            justify-content: center !important;
-            gap: 4px !important;
-            border-radius: 18px !important;
+          .mobileMenuButton {
+            position: relative;
+            z-index: 2;
+            width: 92px;
+            height: 40px;
+            padding: 0 10px;
+            border: 1px solid rgba(147, 197, 253, 0.18);
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            align-self: center;
+            justify-self: end;
+            gap: 7px;
+            cursor: pointer;
+            color: #ffffff;
+            font-family: inherit;
+            transform: translateY(1px);
             background:
-              radial-gradient(circle at 50% 0%, rgba(96, 165, 250, 0.09), transparent 52%),
-              rgba(2, 6, 23, 0.5) !important;
-            border: 1px solid rgba(148, 163, 184, 0.12) !important;
+              radial-gradient(circle at 25% 0%, rgba(255, 255, 255, 0.18), transparent 42%),
+              linear-gradient(135deg, rgba(37, 99, 235, 0.82), rgba(14, 165, 233, 0.36));
+            box-shadow:
+              0 12px 28px rgba(0, 0, 0, 0.3),
+              0 0 22px rgba(56, 189, 248, 0.12),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            transition:
+              border-color 0.22s ease,
+              filter 0.22s ease,
+              transform 0.18s ease,
+              background 0.22s ease;
+          }
+
+          .mobileMenuButton:active {
+            transform: translateY(1px) scale(0.97);
+            filter: brightness(1.08);
+          }
+
+          .mobileMenuButtonIcon {
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
+            border-radius: 999px;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+          }
+
+          .mobileMenuButtonIcon i {
+            width: 11px;
+            height: 2px;
+            border-radius: 999px;
+            background: #ffffff;
+            display: block;
+            transition:
+              transform 0.24s ease,
+              opacity 0.18s ease,
+              width 0.24s ease;
+          }
+
+          .mobileMenuButton strong {
+            color: #ffffff;
+            font-size: 10.5px;
+            font-weight: 950;
+            line-height: 1;
+            letter-spacing: 0.22px;
+            text-transform: uppercase;
+            transform: translateY(0.5px);
+            text-shadow:
+              0 0 12px rgba(255, 255, 255, 0.18),
+              0 0 22px rgba(56, 189, 248, 0.12);
+          }
+
+          .mobileMenuButtonOpen {
+            border-color: rgba(191, 219, 254, 0.34);
+            background:
+              radial-gradient(circle at 25% 0%, rgba(255, 255, 255, 0.2), transparent 42%),
+              linear-gradient(135deg, rgba(14, 165, 233, 0.82), rgba(79, 70, 229, 0.48));
+          }
+
+          .mobileMenuButtonOpen .mobileMenuButtonIcon i:nth-child(1) {
+            width: 12px;
+            transform: translateY(5px) rotate(45deg);
+          }
+
+          .mobileMenuButtonOpen .mobileMenuButtonIcon i:nth-child(2) {
+            opacity: 0;
+          }
+
+          .mobileMenuButtonOpen .mobileMenuButtonIcon i:nth-child(3) {
+            width: 12px;
+            transform: translateY(-5px) rotate(-45deg);
+          }
+
+          .mobileMenuBackdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 999998;
+            display: block;
+            opacity: 0;
+            pointer-events: none;
+            background:
+              radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.12), transparent 36%),
+              rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            transition:
+              opacity 0.24s ease,
+              backdrop-filter 0.24s ease;
+          }
+
+          .mobileMenuBackdropOpen {
+            opacity: 1;
+            pointer-events: auto;
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
+          }
+
+          .mobileMenuPanel {
+            position: fixed;
+            top: max(78px, calc(70px + env(safe-area-inset-top)));
+            left: 50%;
+            z-index: 999999;
+            width: min(382px, calc(100% - 20px));
+            max-height: calc(100svh - 98px - env(safe-area-inset-bottom));
+            padding: 14px;
+            display: grid;
+            gap: 12px;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            border-radius: 30px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translate3d(-50%, -12px, 0) scale(0.96);
+            transform-origin: top center;
+            background:
+              radial-gradient(circle at 10% 0%, rgba(56, 189, 248, 0.2), transparent 42%),
+              radial-gradient(circle at 90% 10%, rgba(37, 99, 235, 0.17), transparent 46%),
+              radial-gradient(circle at 50% 105%, rgba(79, 70, 229, 0.14), transparent 48%),
+              linear-gradient(145deg, rgba(5, 12, 25, 0.98), rgba(3, 8, 18, 0.95));
+            border: 1px solid rgba(147, 197, 253, 0.2);
+            box-shadow:
+              0 26px 70px rgba(0, 0, 0, 0.56),
+              0 0 38px rgba(56, 189, 248, 0.14),
+              0 0 80px rgba(37, 99, 235, 0.08),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(18px) saturate(145%);
+            -webkit-backdrop-filter: blur(18px) saturate(145%);
+            transition:
+              opacity 0.24s ease,
+              transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+          }
+
+          .mobileMenuPanelOpen {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate3d(-50%, 0, 0) scale(1);
+          }
+
+          .mobileMenuPanelGlow {
+            position: absolute;
+            inset: -80px -80px auto auto;
+            width: 230px;
+            height: 230px;
+            border-radius: 999px;
+            background:
+              radial-gradient(circle, rgba(56, 189, 248, 0.18), transparent 64%);
+            filter: blur(28px);
+            pointer-events: none;
+            animation: mobilePanelGlowBreath 4.8s ease-in-out infinite alternate;
+          }
+
+          @keyframes mobilePanelGlowBreath {
+            from {
+              opacity: 0.45;
+              transform: scale(0.92);
+            }
+
+            to {
+              opacity: 0.9;
+              transform: scale(1.08);
+            }
+          }
+
+          .mobileMenuPanelHeader {
+            position: relative;
+            z-index: 2;
+            min-height: 58px;
+            display: grid;
+            grid-template-columns: 1fr 42px;
+            align-items: center;
+            gap: 10px;
+            padding: 0 0 2px;
+            text-align: center;
+          }
+
+          .mobileMenuPanelHeader > div {
+            min-width: 0;
+            width: 100%;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            padding-left: 42px;
+          }
+
+          .mobileMenuPanelHeader span {
+            display: block;
+            color: #93c5fd;
+            font-size: 10px;
+            font-weight: 950;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            text-shadow: 0 0 18px rgba(147, 197, 253, 0.18);
+          }
+
+          .mobileMenuPanelHeader strong {
+            display: block;
+            margin-top: 4px;
+            color: #ffffff;
+            font-size: 17px;
+            font-weight: 950;
+            letter-spacing: -0.35px;
+            text-align: center;
+            text-shadow:
+              0 0 18px rgba(56, 189, 248, 0.16),
+              0 2px 14px rgba(0, 0, 0, 0.36);
+          }
+
+          .mobileMenuPanelHeader small {
+            display: block;
+            margin-top: 4px;
+            color: rgba(219, 234, 254, 0.62);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.2px;
+          }
+
+          .mobileMenuPanelHeader button {
+            width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            border: 1px solid rgba(147, 197, 253, 0.22);
+            color: #ffffff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            align-self: center;
+            justify-self: end;
+            padding: 0;
+            margin: 0;
+            transform: translateY(7px);
+            background:
+              radial-gradient(circle at 25% 0%, rgba(255, 255, 255, 0.14), transparent 42%),
+              linear-gradient(135deg, rgba(15, 23, 42, 0.82), rgba(2, 6, 23, 0.56));
+            box-shadow:
+              0 10px 22px rgba(0, 0, 0, 0.26),
+              0 0 18px rgba(56, 189, 248, 0.08),
+              inset 0 1px 0 rgba(255, 255, 255, 0.07);
+            -webkit-tap-highlight-color: transparent;
+          }
+
+          .mobileMenuPanelHeader button span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 900;
+            line-height: 1;
+            transform: translateY(0);
+            text-shadow:
+              0 0 12px rgba(255, 255, 255, 0.2),
+              0 0 22px rgba(56, 189, 248, 0.18);
+          }
+
+          .mobileMenuWalletCard {
+            position: relative;
+            z-index: 2;
+            padding: 13px;
+            border-radius: 22px;
+            display: grid;
+            grid-template-columns: 46px minmax(0, 1fr);
+            gap: 12px;
+            align-items: center;
+            text-decoration: none;
+            background:
+              radial-gradient(circle at 0% 0%, rgba(34, 197, 94, 0.11), transparent 42%),
+              linear-gradient(145deg, rgba(2, 6, 23, 0.82), rgba(15, 23, 42, 0.62));
+            border: 1px solid rgba(147, 197, 253, 0.13);
+          }
+
+          .mobileMenuWalletCard > span {
+            width: 46px;
+            height: 46px;
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 950;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.7), rgba(34, 197, 94, 0.35));
+            box-shadow: 0 0 28px rgba(34, 197, 94, 0.14);
+          }
+
+          .mobileMenuWalletCard small {
+            display: block;
+            color: #93c5fd;
+            font-size: 10px;
+            font-weight: 950;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+          }
+
+          .mobileMenuWalletCard strong {
+            display: block;
+            margin-top: 4px;
+            color: #ffffff;
+            font-size: 17px;
+            font-weight: 950;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          .mobileMenuSelectors {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+          }
+
+          .mobileMenuSelectors label,
+          .mobileMenuSelectPill {
+            min-width: 0;
+            height: 46px;
+            padding: 0 10px;
+            border-radius: 18px;
+            display: grid;
+            grid-template-columns: 30px minmax(0, 1fr);
+            align-items: center;
+            gap: 8px;
+            background:
+              radial-gradient(circle at 25% 0%, rgba(255, 255, 255, 0.1), transparent 42%),
+              linear-gradient(135deg, rgba(2, 6, 23, 0.84), rgba(15, 23, 42, 0.68));
+            border: 1px solid rgba(147, 197, 253, 0.13);
             box-shadow:
               inset 0 1px 0 rgba(255, 255, 255, 0.04),
-              0 10px 24px rgba(0, 0, 0, 0.18) !important;
+              0 10px 24px rgba(0, 0, 0, 0.14);
           }
 
-          .mobileCinemaTopbar .navAuthGroup {
-            display: contents !important;
+          .mobileMenuSelectIcon {
+            width: 30px;
+            height: 30px;
+            min-width: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            place-items: center;
+            align-self: center;
+            justify-self: center;
+            border-radius: 999px;
+            background:
+              radial-gradient(circle at 35% 20%, rgba(255, 255, 255, 0.2), transparent 42%),
+              linear-gradient(135deg, rgba(37, 99, 235, 0.38), rgba(14, 165, 233, 0.18));
+            box-shadow:
+              inset 0 1px 0 rgba(255, 255, 255, 0.09),
+              0 0 18px rgba(37, 99, 235, 0.1);
+            overflow: hidden;
+            transform: translateY(-1px);
           }
 
-          .mobileCinemaTopbar .navItem,
-          .mobileCinemaTopbar .adminDropdownButton,
-          .mobileCinemaTopbar .navLogoutButton,
-          .mobileCinemaTopbar .navLoginButton,
-          .mobileCinemaTopbar .navRegisterButton {
-            width: 100% !important;
-            min-width: 0 !important;
-            height: 30px !important;
-            min-height: 30px !important;
-            padding: 0 7px !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            gap: 5px !important;
-            border-radius: 14px !important;
-            font-size: 10.5px !important;
-            line-height: 1 !important;
-            white-space: nowrap !important;
+          .mobileMenuSelectIcon em {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            margin: 0;
+            padding: 0;
+            font-style: normal;
+            font-size: 15px;
+            line-height: 1;
+            text-align: center;
+            transform: translate3d(0, -1px, 0);
+            font-family:
+              "Apple Color Emoji",
+              "Segoe UI Emoji",
+              "Noto Color Emoji",
+              system-ui,
+              sans-serif;
           }
 
-          .mobileCinemaTopbar .navItem span:last-child,
-          .mobileCinemaTopbar .adminDropdownButton span:nth-child(2),
-          .mobileCinemaTopbar .navLogoutButton span:last-child,
-          .mobileCinemaTopbar .navLoginButton span:last-child,
-          .mobileCinemaTopbar .navRegisterButton span:last-child {
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
-            white-space: nowrap !important;
+          .mobileMenuSelectors select,
+          .mobileMenuSelectPill select {
+            width: 100%;
+            min-width: 0;
+            height: 100%;
+            border: 0;
+            outline: 0;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 950;
+            letter-spacing: 0.35px;
+            text-shadow:
+              0 0 12px rgba(255, 255, 255, 0.16),
+              0 0 18px rgba(56, 189, 248, 0.12);
+            background: transparent;
+            appearance: none;
+            -webkit-appearance: none;
           }
 
-          .mobileCinemaTopbar .navIcon {
-            width: 18px !important;
-            height: 18px !important;
-            min-width: 18px !important;
-            font-size: 8.5px !important;
+          .mobileMenuLinks,
+          .mobileMenuAdminBlock div {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
           }
 
-          .mobileCinemaTopbar .navBalancePill {
-            grid-column: 1 / -1 !important;
-            width: 100% !important;
-            height: 32px !important;
-            min-height: 32px !important;
-            margin: 0 !important;
-            padding: 0 9px !important;
-            justify-content: center !important;
-            border-radius: 16px !important;
+          .mobileMenuLinks .navItem,
+          .mobileMenuAdminBlock .navItem,
+          .mobileMenuAuthArea .navLoginButton,
+          .mobileMenuAuthArea .navRegisterButton,
+          .mobileMenuAuthArea .navLogoutButton {
+            width: 100%;
+            min-width: 0;
+            height: 46px;
+            padding: 0 10px;
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 8px;
+            text-decoration: none;
+            color: #eaf5ff;
+            font-size: 12px;
+            font-weight: 930;
+            background:
+              radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.09), transparent 42%),
+              linear-gradient(135deg, rgba(2, 6, 23, 0.84), rgba(15, 23, 42, 0.62));
+            border: 1px solid rgba(147, 197, 253, 0.13);
+            box-shadow:
+              inset 0 1px 0 rgba(255, 255, 255, 0.04),
+              0 10px 24px rgba(0, 0, 0, 0.14);
+            transition:
+              transform 0.2s ease,
+              border-color 0.2s ease,
+              background 0.2s ease,
+              box-shadow 0.2s ease,
+              filter 0.2s ease;
           }
 
-          .mobileCinemaTopbar .navBalanceIcon {
-            width: 21px !important;
-            height: 21px !important;
-            min-width: 21px !important;
-            font-size: 10px !important;
+          .mobileMenuLinks .navItem:active,
+          .mobileMenuAdminBlock .navItem:active,
+          .mobileMenuAuthArea .navLoginButton:active,
+          .mobileMenuAuthArea .navRegisterButton:active,
+          .mobileMenuAuthArea .navLogoutButton:active {
+            transform: scale(0.98);
+            filter: brightness(1.08);
           }
 
-          .mobileCinemaTopbar .navBalanceText {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            gap: 5px !important;
+          .mobileMenuLinks .navItemActive,
+          .mobileMenuAdminBlock .navItemActive {
+            color: #ffffff;
+            border-color: rgba(147, 197, 253, 0.34);
+            background:
+              radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.14), transparent 42%),
+              linear-gradient(135deg, rgba(37, 99, 235, 0.58), rgba(14, 165, 233, 0.22));
+            box-shadow:
+              inset 0 1px 0 rgba(255, 255, 255, 0.08),
+              0 12px 28px rgba(0, 0, 0, 0.18),
+              0 0 24px rgba(56, 189, 248, 0.11);
           }
 
-          .mobileCinemaTopbar .navBalanceText small {
-            display: inline-flex !important;
-            font-size: 7.5px !important;
+          .mobileMenuLinks .navIcon,
+          .mobileMenuAdminBlock .navIcon,
+          .mobileMenuAuthArea .navIcon {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            background:
+              radial-gradient(circle at 25% 0%, rgba(255, 255, 255, 0.16), transparent 42%),
+              rgba(37, 99, 235, 0.24);
+            box-shadow:
+              inset 0 1px 0 rgba(255, 255, 255, 0.08),
+              0 0 14px rgba(56, 189, 248, 0.08);
           }
 
-          .mobileCinemaTopbar .navBalanceText strong {
-            font-size: 10.5px !important;
+          .mobileMenuLinks .navItem span:last-child,
+          .mobileMenuAdminBlock .navItem span:last-child,
+          .mobileMenuAuthArea .navLoginButton span:last-child,
+          .mobileMenuAuthArea .navRegisterButton span:last-child,
+          .mobileMenuAuthArea .navLogoutButton span:last-child {
+            min-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            letter-spacing: 0.25px;
+            text-shadow:
+              0 0 12px rgba(255, 255, 255, 0.12),
+              0 0 18px rgba(56, 189, 248, 0.1);
           }
 
-          .mobileCinemaTopbar .navCurrencyBox,
-          .mobileCinemaTopbar .navLanguageBox {
-            width: 100% !important;
-            height: 30px !important;
-            min-height: 30px !important;
-            padding: 0 6px !important;
-            border-radius: 14px !important;
-            justify-content: center !important;
-            gap: 5px !important;
+          .mobileMenuSelectPill {
+            grid-template-columns: 24px minmax(0, 1fr);
+            justify-content: flex-start;
+            gap: 8px;
           }
 
-          .mobileCinemaTopbar .navCurrencySelect,
-          .mobileCinemaTopbar .navLanguageSelect {
-            width: 66px !important;
-            height: 24px !important;
-            line-height: 24px !important;
-            font-size: 10px !important;
-            padding-left: 9px !important;
+          .mobileMenuSelectPill .mobileMenuSelectIcon {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            transform: translateY(-5px);
           }
 
-          .mobileCinemaTopbar .adminDropdown {
-            width: 100% !important;
-            position: relative !important;
+          .mobileMenuSelectPill .mobileMenuSelectIcon em {
+            width: 24px;
+            height: 24px;
+            font-size: 12.5px;
+            transform: translate3d(0, -1px, 0);
           }
 
-          .mobileCinemaTopbar .adminDropdownMenu {
-            position: absolute !important;
-            top: calc(100% + 6px) !important;
-            left: 50% !important;
-            right: auto !important;
-            width: min(310px, 92vw) !important;
-            transform-origin: top center !important;
-            transform: translateX(-50%) translateY(10px) scale(0.98) !important;
-            z-index: 9999999 !important;
-            padding: 9px !important;
-            border-radius: 20px !important;
+          .mobileMenuAdminBlock {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            gap: 9px;
+            padding-top: 3px;
           }
 
-          .mobileCinemaTopbar .adminDropdownMenu[style*="opacity: 1"] {
-            transform: translateX(-50%) translateY(0) scale(1) !important;
+          .mobileMenuAdminBlock > span {
+            color: #93c5fd;
+            font-size: 10px;
+            font-weight: 950;
+            letter-spacing: 1px;
+            text-transform: uppercase;
           }
 
-          .mobileCinemaTopbar .adminDropdownMenu .navItem {
-            justify-content: flex-start !important;
+          .mobileMenuAuthArea {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+          }
+
+          .mobileMenuAuthArea .navLogoutButton {
+            grid-column: 1 / -1;
+            border-color: rgba(248, 113, 113, 0.16);
+            cursor: pointer;
           }
         }
 
         @media (max-width: 420px) {
-          body:has(.mobileCinemaTopbar) {
-            padding-top: 146px !important;
+          .mobileTopbarSpacer {
+            height: 80px;
           }
 
-          .mobileCinemaTopbar {
-            padding: 6px 6px 7px !important;
-            gap: 4px !important;
+          .mobileMenuDock {
+            top: max(12px, calc(env(safe-area-inset-top) + 8px));
+            width: calc(100% - 14px);
+            min-height: 52px;
+            padding: 6px;
+            gap: 6px;
           }
 
-          .mobileCinemaTopbar .premiumLogo,
-          .mobileCinemaTopbar .logo {
-            max-width: 300px !important;
-            height: 33px !important;
-            min-height: 33px !important;
+          .mobileMenuBrand {
+            height: 39px;
+            padding-right: 9px;
           }
 
-          .mobileCinemaTopbar .logoText {
-            font-size: 12.5px !important;
+          .mobileMenuBrand img {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
           }
 
-          .mobileCinemaTopbar .premiumNavlinks,
-          .mobileCinemaTopbar .navlinks {
-            max-width: 318px !important;
-            padding: 5px !important;
-            gap: 4px !important;
-            border-radius: 17px !important;
+          .mobileMenuBrand span {
+            font-size: 12px;
           }
 
-          .mobileCinemaTopbar .navItem,
-          .mobileCinemaTopbar .adminDropdownButton,
-          .mobileCinemaTopbar .navLogoutButton,
-          .mobileCinemaTopbar .navLoginButton,
-          .mobileCinemaTopbar .navRegisterButton {
-            height: 29px !important;
-            min-height: 29px !important;
-            font-size: 10px !important;
-            padding: 0 6px !important;
+          .mobileMenuBalance {
+            max-width: 82px;
+            height: 39px;
+            padding: 0 10px;
+            font-size: 10px;
           }
 
-          .mobileCinemaTopbar .navIcon {
-            width: 17px !important;
-            height: 17px !important;
-            min-width: 17px !important;
-            font-size: 8px !important;
+          .mobileMenuButton {
+            width: 86px;
+            height: 39px;
+            padding: 0 8px;
+            gap: 6px;
+            transform: translateY(1px);
           }
 
-          .mobileCinemaTopbar .navBalancePill {
-            height: 31px !important;
-            min-height: 31px !important;
+          .mobileMenuButtonIcon {
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
           }
 
-          .mobileCinemaTopbar .navCurrencyBox,
-          .mobileCinemaTopbar .navLanguageBox {
-            height: 29px !important;
-            min-height: 29px !important;
+          .mobileMenuButton strong {
+            font-size: 10px;
+          }
+
+          .mobileMenuPanel {
+            top: max(76px, calc(68px + env(safe-area-inset-top)));
+            width: calc(100% - 14px);
+            max-height: calc(100svh - 94px - env(safe-area-inset-bottom));
+            border-radius: 26px;
+            padding: 12px;
+          }
+
+          .mobileMenuPanelHeader {
+            grid-template-columns: 1fr 40px;
+            min-height: 58px;
+          }
+
+          .mobileMenuPanelHeader > div {
+            padding-left: 40px;
+          }
+
+          .mobileMenuPanelHeader strong {
+            font-size: 16px;
+          }
+
+          .mobileMenuPanelHeader button {
+            width: 40px;
+            height: 40px;
+            transform: translateY(7px);
+          }
+
+          .mobileMenuPanelHeader button span {
+            width: 40px;
+            height: 40px;
+          }
+
+          .mobileMenuLinks,
+          .mobileMenuAdminBlock div {
+            gap: 7px;
+          }
+
+          .mobileMenuLinks .navItem,
+          .mobileMenuAdminBlock .navItem,
+          .mobileMenuAuthArea .navLoginButton,
+          .mobileMenuAuthArea .navRegisterButton,
+          .mobileMenuAuthArea .navLogoutButton,
+          .mobileMenuSelectPill,
+          .mobileMenuSelectors label {
+            height: 44px;
+            border-radius: 17px;
+            font-size: 11px;
+            padding: 0 8px;
+          }
+
+          .mobileMenuSelectIcon {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            transform: translateY(-1px);
+          }
+
+          .mobileMenuSelectIcon em {
+            width: 28px;
+            height: 28px;
+            font-size: 14px;
+            transform: translate3d(0, -1px, 0);
+          }
+
+          .mobileMenuSelectPill {
+            grid-template-columns: 24px minmax(0, 1fr);
+          }
+
+          .mobileMenuSelectPill .mobileMenuSelectIcon {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            transform: translateY(-5px);
+          }
+
+          .mobileMenuSelectPill .mobileMenuSelectIcon em {
+            width: 24px;
+            height: 24px;
+            font-size: 12.5px;
+            transform: translate3d(0, -1px, 0);
+          }
+        }
+
+        @media (max-width: 360px) {
+          .mobileMenuDock {
+            grid-template-columns: minmax(0, 1fr) auto;
+          }
+
+          .mobileMenuBalance {
+            display: none;
+          }
+
+          .mobileMenuButton {
+            width: 84px;
+          }
+
+          .mobileMenuBrand span {
+            max-width: 126px;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .mobileMenuBackdrop,
+          .mobileMenuPanel,
+          .mobileMenuButtonIcon i,
+          .mobileMenuButton,
+          .mobileMenuDock::before,
+          .mobileMenuPanelGlow {
+            transition: none !important;
+            animation: none !important;
           }
         }
       `}

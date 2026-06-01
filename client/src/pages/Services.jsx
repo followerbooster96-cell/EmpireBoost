@@ -108,7 +108,7 @@ const platformVisuals = {
   },
 };
 
-const floatingSocials = [
+const floatingSocialBase = [
   "Instagram",
   "TikTok",
   "YouTube",
@@ -126,6 +126,10 @@ const floatingSocials = [
   "Members",
   "Subscribers",
 ];
+
+const floatingSocials = Array.from({ length: 80 }, (_, index) => {
+  return floatingSocialBase[index % floatingSocialBase.length];
+});
 
 function getVisual(platformName) {
   return platformVisuals[platformName] || platformVisuals.Other;
@@ -305,9 +309,16 @@ function Services() {
   const createOrder = async (service) => {
     setMessage("");
 
+    const token = localStorage.getItem("token");
     const form = orderForms[service._id] || {};
     const link = form.link || "";
     const quantity = Number(form.quantity || 0);
+
+    if (!token) {
+      setMessageType("error");
+      setMessage("Please log in before creating an order.");
+      return;
+    }
 
     if (!link.trim()) {
       setMessageType("error");

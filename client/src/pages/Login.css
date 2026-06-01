@@ -1,7 +1,10 @@
 .loginPagePro {
   position: relative;
-  min-height: calc(100vh - 78px);
-  overflow: hidden;
+  min-height: calc(100svh - 78px);
+  height: auto;
+  width: 100%;
+  overflow-x: clip;
+  overflow-y: visible;
   padding: 54px 28px 90px;
   display: flex;
   align-items: flex-start;
@@ -12,6 +15,17 @@
     radial-gradient(circle at 50% 100%, rgba(79, 70, 229, 0.14), transparent 35%),
     linear-gradient(180deg, #04070d 0%, #06101b 46%, #05070d 100%);
   isolation: isolate;
+}
+
+.loginPagePro,
+.loginPagePro * {
+  box-sizing: border-box;
+}
+
+.loginPagePro button,
+.loginPagePro a,
+.loginPagePro input {
+  touch-action: manipulation;
 }
 
 .loginBackgroundGrid {
@@ -949,6 +963,7 @@
   display: grid;
   gap: 12px;
   align-content: center;
+  min-width: 0;
 }
 
 .loginCard {
@@ -956,6 +971,7 @@
   padding: 24px 30px;
   display: grid;
   gap: 10px;
+  min-width: 0;
 }
 
 .loginCardGlow {
@@ -1058,11 +1074,12 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.04),
     0 14px 34px rgba(0, 0, 0, 0.22);
+  min-width: 0;
 }
 
 .loginCardTitleRow {
   display: grid;
-  grid-template-columns: 42px 1fr;
+  grid-template-columns: 42px minmax(0, 1fr);
   gap: 12px;
   align-items: center;
 }
@@ -1098,6 +1115,7 @@
   font-size: 15px;
   line-height: 1.2;
   font-weight: 950;
+  overflow-wrap: anywhere;
 }
 
 .loginCardTitleRow p {
@@ -1106,6 +1124,7 @@
   font-size: 12px;
   line-height: 1.42;
   font-weight: 750;
+  overflow-wrap: anywhere;
 }
 
 .loginTurnstileWrap {
@@ -1135,6 +1154,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   transition:
     opacity 0.18s ease,
     filter 0.18s ease;
@@ -1159,7 +1179,7 @@
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   gap: 12px;
   align-items: center;
   margin: 1px 0;
@@ -1175,6 +1195,7 @@
   color: #8397b6;
   font-size: 12px;
   font-weight: 850;
+  white-space: nowrap;
 }
 
 .loginInputGroup {
@@ -1182,6 +1203,7 @@
   z-index: 2;
   display: grid;
   gap: 8px;
+  min-width: 0;
 }
 
 .loginInputGroup > span {
@@ -1197,7 +1219,7 @@
   width: 100%;
   height: 52px;
   display: grid;
-  grid-template-columns: 44px 1fr auto;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
   align-items: center;
   border-radius: 18px;
   border: 1px solid rgba(147, 197, 253, 0.14);
@@ -1210,10 +1232,11 @@
     border-color 0.2s ease,
     box-shadow 0.2s ease,
     filter 0.2s ease;
+  min-width: 0;
 }
 
 .loginInputShell {
-  grid-template-columns: 44px 1fr;
+  grid-template-columns: 44px minmax(0, 1fr);
 }
 
 .loginInputShell:focus-within,
@@ -1237,6 +1260,7 @@
 .loginInputShell input,
 .loginPasswordWrap input {
   width: 100%;
+  min-width: 0;
   height: 100%;
   border: 0;
   outline: 0;
@@ -1276,9 +1300,13 @@
 }
 
 .loginSessionBox {
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
+}
+
+.loginSessionBox > div {
+  min-width: 0;
 }
 
 .loginSessionBox > div span {
@@ -1296,20 +1324,23 @@
   font-size: 13px;
   font-weight: 950;
   word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .loginSessionActions {
   display: grid;
   gap: 8px;
   justify-items: end;
+  min-width: 0;
 }
 
 .loginRememberRow {
   display: inline-grid;
-  grid-template-columns: 24px 1fr;
+  grid-template-columns: 24px minmax(0, 1fr);
   gap: 9px;
   align-items: center;
   cursor: pointer;
+  min-width: 0;
 }
 
 .loginRememberRow input {
@@ -1490,8 +1521,9 @@
   border-radius: 28px;
   padding: 14px;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
+  min-width: 0;
 }
 
 .loginTrustBox div {
@@ -1502,6 +1534,7 @@
   background:
     linear-gradient(135deg, rgba(2, 6, 23, 0.76), rgba(15, 23, 42, 0.54));
   border: 1px solid rgba(147, 197, 253, 0.1);
+  min-width: 0;
 }
 
 .loginTrustBox strong {
@@ -1509,6 +1542,7 @@
   color: #ffffff;
   font-size: 14px;
   font-weight: 950;
+  overflow-wrap: anywhere;
 }
 
 .loginTrustBox span {
@@ -1518,6 +1552,7 @@
   font-size: 12px;
   font-weight: 750;
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 @media (max-width: 1120px) {
@@ -1544,20 +1579,145 @@
 }
 
 @media (max-width: 720px) {
+  html {
+    width: 100%;
+    min-height: 100%;
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-behavior: auto;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    width: 100%;
+    min-height: 100%;
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: static;
+    overscroll-behavior-x: none;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #root {
+    width: 100%;
+    min-height: 100%;
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: visible;
+    position: relative;
+  }
+
   .loginPagePro {
-    min-height: calc(100vh - 60px);
-    padding: 54px 18px 58px;
+    min-height: auto;
+    width: 100%;
+    max-width: 100vw;
+    height: auto;
+    padding: 16px 12px max(110px, calc(86px + env(safe-area-inset-bottom)));
     align-items: flex-start;
+    justify-content: center;
+    overflow: visible;
+    overflow-x: clip;
+    overscroll-behavior: auto;
+    transform: none;
+    contain: none;
+    isolation: auto;
+    touch-action: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .loginPagePro::before,
+  .loginPagePro::after,
+  .loginNoiseLayer,
+  .loginBackgroundGrid,
+  .loginAurora,
+  .loginLightLine,
+  .loginFloatingLayer {
+    pointer-events: none;
+    touch-action: none;
+  }
+
+  .loginPagePro::before,
+  .loginPagePro::after {
+    position: fixed;
+    inset: 0;
+  }
+
+  .loginBackgroundGrid,
+  .loginNoiseLayer,
+  .loginAurora,
+  .loginLightLine,
+  .loginFloatingLayer {
+    display: none;
   }
 
   .loginShell {
+    width: 100%;
+    max-width: 430px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
     gap: 16px;
+    align-items: stretch;
+    overflow: visible;
+    touch-action: auto;
+  }
+
+  .loginFormPanel {
+    order: 1;
+    width: 100%;
+    max-width: 430px;
+    margin: 0 auto;
+    display: grid;
+    gap: 12px;
+    overflow: visible;
+    touch-action: auto;
+  }
+
+  .loginBrandPanel {
+    order: 2;
+    width: 100%;
+    max-width: 430px;
+    margin: 0 auto;
+  }
+
+  .loginTrustBox {
+    order: 3;
+  }
+
+  .loginBrandPanel,
+  .loginCard,
+  .loginTrustBox {
+    transform: none !important;
+    transition: border-color 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+  }
+
+  .loginBrandPanel:hover,
+  .loginCard:hover,
+  .loginTrustBox:hover {
+    transform: none !important;
+  }
+
+  .loginBrandPanel::before,
+  .loginCard::before,
+  .loginTrustBox::before {
+    display: none;
   }
 
   .loginBrandPanel,
   .loginCard {
-    border-radius: 30px;
-    padding: 26px;
+    width: 100%;
+    max-width: 430px;
+    border-radius: 28px;
+    padding: 20px;
+  }
+
+  .loginCard {
+    gap: 10px;
+    overflow: hidden;
+    touch-action: auto;
   }
 
   .loginBrandPanel {
@@ -1568,15 +1728,26 @@
   .loginBadge {
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 18px;
   }
 
   .loginHeroTitle {
-    font-size: 42px;
-    letter-spacing: -1.8px;
+    max-width: 100%;
+    font-size: clamp(34px, 10.6vw, 44px);
+    line-height: 1.02;
+    letter-spacing: -1.6px;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+
+  .loginHeroTitle strong {
+    max-width: 100%;
   }
 
   .loginBrandPanel p {
-    font-size: 16px;
+    max-width: 100%;
+    font-size: 14px;
+    line-height: 1.55;
   }
 
   .loginBenefits {
@@ -1585,6 +1756,16 @@
 
   .loginBenefitCard {
     text-align: left;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 12px;
+    padding: 13px;
+    border-radius: 20px;
+  }
+
+  .loginBenefitIcon {
+    width: 44px;
+    height: 44px;
+    border-radius: 16px;
   }
 
   .loginMiniStats,
@@ -1592,12 +1773,33 @@
     grid-template-columns: 1fr;
   }
 
+  .loginMiniStats {
+    gap: 10px;
+  }
+
+  .loginMiniStats div {
+    padding: 14px;
+  }
+
+  .loginFormHeader {
+    max-width: 100%;
+    width: 100%;
+    text-align: center;
+  }
+
   .loginFormHeader h2 {
     font-size: 32px;
   }
 
+  .loginFormHeader p {
+    max-width: 290px;
+    margin: 0 auto;
+    overflow-wrap: anywhere;
+  }
+
   .loginCardTitleRow {
-    grid-template-columns: 38px 1fr;
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 10px;
   }
 
   .loginCardIcon {
@@ -1606,77 +1808,231 @@
     border-radius: 15px;
   }
 
+  .loginCardTitleRow p {
+    max-width: 100%;
+  }
+
+  .loginActionCard,
+  .loginSessionBox,
+  .loginInputGroup,
+  .loginDivider,
+  .loginSubmitBtn,
+  .loginRegisterLink,
+  .loginTrustBox,
+  .loginBrandPanel {
+    touch-action: auto;
+  }
+
+  .loginTurnstileWrap {
+    width: 100%;
+    min-height: 76px;
+    overflow: hidden;
+    touch-action: auto;
+  }
+
+  .loginGoogleButtonWrap {
+    touch-action: auto;
+  }
+
   .loginSessionBox {
     grid-template-columns: 1fr;
   }
 
   .loginSessionActions {
-    justify-items: start;
+    width: 100%;
+    justify-items: stretch;
   }
 
   .loginRememberRow {
-    width: fit-content;
+    width: 100%;
+    touch-action: manipulation;
   }
 
-  .loginFloatingLayer {
-    opacity: 0.45;
-  }
-
-  .loginFloat9,
-  .loginFloat10,
-  .loginFloat11,
-  .loginFloat12,
-  .loginFloat13,
-  .loginFloat14,
-  .loginFloat15,
-  .loginFloat16,
-  .loginFloat17,
-  .loginFloat18 {
-    display: none;
+  .loginForgotLink {
+    justify-self: center;
+    text-align: center;
   }
 }
 
 @media (max-width: 480px) {
   .loginPagePro {
-    padding: 48px 14px 54px;
+    padding: 14px 10px max(120px, calc(96px + env(safe-area-inset-bottom)));
+  }
+
+  .loginShell {
+    max-width: 100%;
+    gap: 14px;
   }
 
   .loginBrandPanel,
   .loginCard {
-    border-radius: 26px;
-    padding: 22px;
+    max-width: 100%;
+    border-radius: 24px;
+    padding: 18px;
+  }
+
+  .loginCard {
+    gap: 9px;
+  }
+
+  .loginActionCard,
+  .loginSessionBox {
+    padding: 12px;
+    border-radius: 19px;
   }
 
   .loginHeroTitle {
-    font-size: 36px;
-    line-height: 0.98;
+    font-size: clamp(31px, 10vw, 38px);
+    line-height: 1.04;
+    letter-spacing: -1.2px;
   }
 
   .loginBadge {
-    font-size: 10px;
-    padding: 10px 13px;
+    font-size: 9px;
+    padding: 9px 12px;
+    max-width: 100%;
+    justify-content: center;
+    white-space: normal;
+  }
+
+  .loginBrandPanel p {
+    font-size: 13px;
   }
 
   .loginBenefitCard {
-    grid-template-columns: 1fr;
+    grid-template-columns: 40px minmax(0, 1fr);
+  }
+
+  .loginBenefitIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .loginBenefitCard h2 {
+    font-size: 14px;
+  }
+
+  .loginBenefitCard span {
+    font-size: 12px;
+  }
+
+  .loginInputShell,
+  .loginPasswordWrap {
+    height: 50px;
   }
 
   .loginPasswordWrap {
-    grid-template-columns: 40px 1fr auto;
+    grid-template-columns: 38px minmax(0, 1fr) auto;
+  }
+
+  .loginInputShell {
+    grid-template-columns: 38px minmax(0, 1fr);
   }
 
   .loginShowPasswordBtn {
-    min-width: 62px;
+    min-width: 56px;
+    height: 34px;
+    margin-right: 7px;
+    font-size: 10px;
+    padding: 0 9px;
+  }
+
+  .loginFormHeader h2 {
+    font-size: 30px;
+  }
+
+  .loginCardTitleRow strong {
+    font-size: 14px;
+  }
+
+  .loginCardTitleRow p {
     font-size: 11px;
-    padding: 0 10px;
   }
 
   .loginTurnstileWrap {
-    transform: scale(0.92);
+    min-height: 78px;
+  }
+
+  .loginTurnstileWrap > div {
+    max-width: 100%;
+    transform: scale(0.9);
     transform-origin: center;
   }
 
-  .loginFloatingLayer {
+  .loginGoogleButtonWrap > div {
+    max-width: 100%;
+    transform: scale(0.94);
+    transform-origin: center;
+  }
+
+  .loginSubmitBtn,
+  .loginRegisterLink {
+    min-height: 50px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 380px) {
+  .loginPagePro {
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-bottom: max(130px, calc(104px + env(safe-area-inset-bottom)));
+  }
+
+  .loginBrandPanel,
+  .loginCard {
+    padding: 15px;
+    border-radius: 22px;
+  }
+
+  .loginActionCard,
+  .loginSessionBox {
+    padding: 11px;
+  }
+
+  .loginHeroTitle {
+    font-size: 30px;
+  }
+
+  .loginFormHeader h2 {
+    font-size: 28px;
+  }
+
+  .loginTurnstileWrap > div {
+    transform: scale(0.84);
+  }
+
+  .loginGoogleButtonWrap > div {
+    transform: scale(0.9);
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .loginBrandPanel:hover,
+  .loginCard:hover,
+  .loginTrustBox:hover,
+  .loginBenefitCard:hover,
+  .loginSubmitBtn:hover:not(:disabled),
+  .loginRegisterLink:hover,
+  .loginShowPasswordBtn:hover,
+  .loginForgotLink:hover {
+    transform: none !important;
+    filter: none;
+  }
+
+  .loginBrandPanel::before,
+  .loginCard::before,
+  .loginTrustBox::before {
     display: none;
+  }
+
+  .loginPagePro,
+  .loginShell,
+  .loginFormPanel,
+  .loginCard,
+  .loginBrandPanel,
+  .loginTrustBox {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
 }
