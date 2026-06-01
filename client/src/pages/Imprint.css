@@ -1,0 +1,827 @@
+.imprintPagePro {
+  position: relative;
+  min-height: calc(100vh - 78px);
+  overflow: hidden;
+  padding: 86px 28px 92px;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(37, 99, 235, 0.14), transparent 34%),
+    radial-gradient(circle at 88% 18%, rgba(14, 165, 233, 0.1), transparent 32%),
+    linear-gradient(180deg, #04070d 0%, #06101b 46%, #05070d 100%);
+  isolation: isolate;
+}
+
+.imprintPagePro::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -6;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(96, 165, 250, 0.042) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(96, 165, 250, 0.042) 1px, transparent 1px);
+  background-size: 46px 46px;
+  opacity: 0.36;
+  mask-image: radial-gradient(circle at 50% 18%, black, transparent 76%);
+}
+
+.imprintPagePro::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -5;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 20% 24%, rgba(56, 189, 248, 0.08), transparent 27%),
+    radial-gradient(circle at 84% 42%, rgba(45, 212, 191, 0.075), transparent 27%),
+    radial-gradient(circle at 58% 82%, rgba(167, 139, 250, 0.08), transparent 30%);
+  filter: blur(2px);
+  opacity: 0.84;
+  animation: imprintSurfaceFlow 24s ease-in-out infinite;
+}
+
+@keyframes imprintSurfaceFlow {
+  0% {
+    opacity: 0.58;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    opacity: 0.95;
+    transform: translate3d(0, -14px, 0) scale(1.03);
+  }
+
+  100% {
+    opacity: 0.58;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.imprintAurora {
+  position: absolute;
+  inset: -16%;
+  z-index: -4;
+  pointer-events: none;
+  overflow: hidden;
+  filter: blur(62px);
+  opacity: 0.84;
+}
+
+.imprintAurora span {
+  position: absolute;
+  border-radius: 999px;
+  mix-blend-mode: screen;
+}
+
+.imprintAuroraOne {
+  width: 58vw;
+  height: 20vw;
+  left: -8%;
+  top: 10%;
+  background: linear-gradient(
+    90deg,
+    rgba(37, 99, 235, 0.1),
+    rgba(56, 189, 248, 0.2),
+    rgba(14, 165, 233, 0.1)
+  );
+  animation: imprintAuroraOne 34s linear infinite;
+}
+
+.imprintAuroraTwo {
+  width: 52vw;
+  height: 18vw;
+  right: -8%;
+  top: 30%;
+  background: linear-gradient(
+    90deg,
+    rgba(16, 185, 129, 0.07),
+    rgba(45, 212, 191, 0.16),
+    rgba(56, 189, 248, 0.08)
+  );
+  animation: imprintAuroraTwo 38s linear infinite;
+}
+
+.imprintAuroraThree {
+  width: 62vw;
+  height: 22vw;
+  left: 10%;
+  bottom: 0%;
+  background: linear-gradient(
+    90deg,
+    rgba(76, 29, 149, 0.07),
+    rgba(124, 58, 237, 0.15),
+    rgba(96, 165, 250, 0.09)
+  );
+  animation: imprintAuroraThree 42s linear infinite;
+}
+
+@keyframes imprintAuroraOne {
+  0% {
+    opacity: 0.48;
+    transform: translate3d(-3%, 0, 0) rotate(-7deg) scale(1);
+  }
+
+  50% {
+    opacity: 0.84;
+    transform: translate3d(10%, 5%, 0) rotate(-3deg) scale(1.08);
+  }
+
+  100% {
+    opacity: 0.48;
+    transform: translate3d(-3%, 0, 0) rotate(-7deg) scale(1);
+  }
+}
+
+@keyframes imprintAuroraTwo {
+  0% {
+    opacity: 0.44;
+    transform: translate3d(0, 0, 0) rotate(8deg) scale(1);
+  }
+
+  50% {
+    opacity: 0.78;
+    transform: translate3d(-10%, -4%, 0) rotate(4deg) scale(1.06);
+  }
+
+  100% {
+    opacity: 0.44;
+    transform: translate3d(0, 0, 0) rotate(8deg) scale(1);
+  }
+}
+
+@keyframes imprintAuroraThree {
+  0% {
+    opacity: 0.4;
+    transform: translate3d(0, 0, 0) rotate(-5deg) scale(1);
+  }
+
+  50% {
+    opacity: 0.74;
+    transform: translate3d(8%, -6%, 0) rotate(-1deg) scale(1.08);
+  }
+
+  100% {
+    opacity: 0.4;
+    transform: translate3d(0, 0, 0) rotate(-5deg) scale(1);
+  }
+}
+
+.imprintFloatingLayer {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.72;
+  mask-image: linear-gradient(180deg, transparent 0%, black 12%, black 88%, transparent 100%);
+}
+
+.imprintFloat {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background:
+    linear-gradient(135deg, rgba(8, 15, 30, 0.44), rgba(15, 23, 42, 0.22));
+  border: 1px solid rgba(147, 197, 253, 0.1);
+  color: rgba(226, 239, 255, 0.72);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.58px;
+  text-transform: uppercase;
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.18),
+    0 0 28px rgba(96, 165, 250, 0.06);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  animation: imprintFloatMove var(--floatDuration) ease-in-out infinite;
+  animation-delay: var(--floatDelay);
+}
+
+.imprintFloat1 {
+  left: 7%;
+  top: 18%;
+  --floatDuration: 28s;
+  --floatDelay: -4s;
+  --moveX: 60px;
+  --moveY: 150px;
+  --rotate: -8deg;
+}
+
+.imprintFloat2 {
+  right: 8%;
+  top: 18%;
+  --floatDuration: 31s;
+  --floatDelay: -12s;
+  --moveX: -75px;
+  --moveY: 170px;
+  --rotate: 8deg;
+}
+
+.imprintFloat3 {
+  left: 13%;
+  top: 70%;
+  --floatDuration: 35s;
+  --floatDelay: -18s;
+  --moveX: 95px;
+  --moveY: -130px;
+  --rotate: 5deg;
+}
+
+.imprintFloat4 {
+  right: 14%;
+  top: 74%;
+  --floatDuration: 34s;
+  --floatDelay: -9s;
+  --moveX: -90px;
+  --moveY: -140px;
+  --rotate: -6deg;
+}
+
+.imprintFloat5 {
+  left: 44%;
+  top: 14%;
+  --floatDuration: 38s;
+  --floatDelay: -22s;
+  --moveX: 56px;
+  --moveY: 190px;
+  --rotate: -4deg;
+}
+
+.imprintFloat6 {
+  left: 5%;
+  top: 44%;
+  --floatDuration: 32s;
+  --floatDelay: -7s;
+  --moveX: 85px;
+  --moveY: 135px;
+  --rotate: 4deg;
+}
+
+.imprintFloat7 {
+  right: 6%;
+  top: 42%;
+  --floatDuration: 30s;
+  --floatDelay: -15s;
+  --moveX: -68px;
+  --moveY: 120px;
+  --rotate: 6deg;
+}
+
+.imprintFloat8 {
+  left: 22%;
+  top: 86%;
+  --floatDuration: 36s;
+  --floatDelay: -20s;
+  --moveX: 80px;
+  --moveY: -150px;
+  --rotate: -5deg;
+}
+
+@keyframes imprintFloatMove {
+  0% {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translate3d(0, 0, 0) scale(0.82) rotate(calc(var(--rotate) * -1));
+  }
+
+  14% {
+    opacity: 0.45;
+    filter: blur(0);
+  }
+
+  48% {
+    opacity: 0.78;
+    transform: translate3d(calc(var(--moveX) * 0.56), calc(var(--moveY) * 0.56), 0)
+      scale(1) rotate(var(--rotate));
+  }
+
+  78% {
+    opacity: 0.42;
+  }
+
+  100% {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translate3d(var(--moveX), var(--moveY), 0) scale(0.86)
+      rotate(calc(var(--rotate) * 1.5));
+  }
+}
+
+.imprintHero,
+.imprintIntroCard,
+.imprintBusinessCard,
+.imprintContentGrid,
+.imprintDisclaimerCard,
+.imprintContactCard {
+  width: min(1180px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  z-index: 2;
+}
+
+.imprintHero {
+  text-align: center;
+  padding: 50px 34px 38px;
+}
+
+.imprintBadge {
+  width: fit-content;
+  margin: 0 auto 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background:
+    linear-gradient(135deg, rgba(37, 99, 235, 0.24), rgba(14, 165, 233, 0.1));
+  border: 1px solid rgba(147, 197, 253, 0.26);
+  color: #eaf5ff;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 1.15px;
+  text-transform: uppercase;
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.28),
+    0 0 35px rgba(96, 165, 250, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.imprintBadge span {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #22c55e;
+  box-shadow: 0 0 18px rgba(34, 197, 94, 0.8);
+  animation: imprintPulse 1.55s ease-in-out infinite;
+}
+
+@keyframes imprintPulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.55;
+    transform: scale(1.35);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.imprintHero h1 {
+  max-width: 980px;
+  margin: 0 auto 20px;
+  font-size: clamp(48px, 6.8vw, 96px);
+  line-height: 0.92;
+  letter-spacing: -4px;
+  font-weight: 950;
+  background:
+    linear-gradient(
+      90deg,
+      #ffffff 0%,
+      #f7fcff 14%,
+      #d9f0ff 30%,
+      #8bd4ff 48%,
+      #ffffff 67%,
+      #b7e3ff 84%,
+      #ffffff 100%
+    );
+  background-size: 280% 280%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: imprintTitleShine 8s ease-in-out infinite;
+  filter:
+    drop-shadow(0 10px 0 rgba(0, 0, 0, 0.2))
+    drop-shadow(0 15px 28px rgba(0, 0, 0, 0.78))
+    drop-shadow(0 0 24px rgba(96, 165, 250, 0.14));
+}
+
+@keyframes imprintTitleShine {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.imprintHero p {
+  max-width: 820px;
+  margin: 0 auto;
+  color: #d3e1f5;
+  font-size: 18px;
+  line-height: 1.78;
+  font-weight: 650;
+  letter-spacing: -0.12px;
+  text-shadow: 0 10px 26px rgba(0, 0, 0, 0.62);
+}
+
+.imprintHeroGrid {
+  max-width: 950px;
+  margin: 30px auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.imprintHeroGrid div,
+.imprintIntroCard,
+.imprintBusinessCard,
+.imprintSectionCard,
+.imprintDisclaimerCard,
+.imprintContactCard {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 16% 0%, rgba(96, 165, 250, 0.13), transparent 36%),
+    linear-gradient(145deg, rgba(9, 16, 32, 0.9), rgba(3, 8, 22, 0.84));
+  border: 1px solid rgba(147, 197, 253, 0.16);
+  box-shadow:
+    0 28px 82px rgba(0, 0, 0, 0.4),
+    0 0 52px rgba(37, 99, 235, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  transition:
+    transform 0.26s ease,
+    box-shadow 0.26s ease,
+    border-color 0.26s ease,
+    filter 0.26s ease;
+}
+
+.imprintHeroGrid div:hover,
+.imprintIntroCard:hover,
+.imprintBusinessCard:hover,
+.imprintSectionCard:hover,
+.imprintDisclaimerCard:hover,
+.imprintContactCard:hover {
+  transform: translateY(-4px);
+  border-color: rgba(147, 197, 253, 0.3);
+  box-shadow:
+    0 38px 96px rgba(0, 0, 0, 0.48),
+    0 0 68px rgba(37, 99, 235, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  filter: brightness(1.02);
+}
+
+.imprintHeroGrid div {
+  border-radius: 24px;
+  padding: 20px;
+  text-align: left;
+}
+
+.imprintHeroGrid strong {
+  display: block;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 950;
+}
+
+.imprintHeroGrid span {
+  display: block;
+  margin-top: 7px;
+  color: #91a5c3;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.imprintIntroCard,
+.imprintBusinessCard,
+.imprintDisclaimerCard,
+.imprintContactCard {
+  margin-bottom: 24px;
+  padding: 30px;
+  border-radius: 34px;
+}
+
+.imprintIntroCard,
+.imprintDisclaimerCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+}
+
+.imprintBusinessCard {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 24px;
+  align-items: center;
+}
+
+.imprintIntroCard span,
+.imprintBusinessCard span,
+.imprintDisclaimerCard span,
+.imprintContactCard span {
+  display: block;
+  margin-bottom: 10px;
+  color: #93c5fd;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.imprintIntroCard h2,
+.imprintBusinessCard h2,
+.imprintDisclaimerCard h2,
+.imprintContactCard h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 1;
+  letter-spacing: -1px;
+  font-weight: 950;
+}
+
+.imprintIntroCard p,
+.imprintBusinessCard p,
+.imprintDisclaimerCard p,
+.imprintContactCard p {
+  max-width: 760px;
+  margin: 14px 0 0;
+  color: #9fb2cf;
+  font-size: 15px;
+  line-height: 1.68;
+  font-weight: 750;
+}
+
+.imprintIntroIcon,
+.imprintDisclaimerIcon {
+  width: 76px;
+  height: 76px;
+  min-width: 76px;
+  border-radius: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 34px;
+  font-weight: 950;
+  background:
+    radial-gradient(circle at 25% 0%, rgba(255, 255, 255, 0.2), transparent 42%),
+    linear-gradient(135deg, rgba(37, 99, 235, 0.52), rgba(14, 165, 233, 0.2));
+  border: 1px solid rgba(191, 219, 254, 0.22);
+  box-shadow:
+    0 18px 42px rgba(37, 99, 235, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.imprintDisclaimerIcon {
+  background:
+    radial-gradient(circle at 25% 0%, rgba(255, 255, 255, 0.2), transparent 42%),
+    linear-gradient(135deg, rgba(245, 158, 11, 0.52), rgba(37, 99, 235, 0.18));
+}
+
+.imprintBusinessGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.imprintBusinessGrid div {
+  padding: 18px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(96, 165, 250, 0.1), transparent 38%),
+    linear-gradient(145deg, rgba(2, 6, 23, 0.88), rgba(15, 23, 42, 0.68));
+  border: 1px solid rgba(147, 197, 253, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 16px 34px rgba(0, 0, 0, 0.22);
+}
+
+.imprintBusinessGrid strong {
+  display: block;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.imprintBusinessGrid span,
+.imprintBusinessGrid a {
+  display: block;
+  margin-top: 7px;
+  color: #8fa4c2;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.45;
+  text-decoration: none;
+  word-break: break-word;
+}
+
+.imprintBusinessGrid a:hover {
+  color: #bfdbfe;
+}
+
+.imprintContentGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.imprintSectionCard {
+  min-height: 230px;
+  border-radius: 30px;
+  padding: 26px;
+}
+
+.imprintSectionTop {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.imprintSectionTop span {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #dbeafe;
+  font-size: 13px;
+  font-weight: 950;
+  background:
+    radial-gradient(circle at 25% 0%, rgba(255, 255, 255, 0.14), transparent 42%),
+    linear-gradient(135deg, rgba(37, 99, 235, 0.32), rgba(14, 165, 233, 0.12));
+  border: 1px solid rgba(147, 197, 253, 0.16);
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.imprintSectionTop h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 24px;
+  line-height: 1.08;
+  letter-spacing: -0.6px;
+  font-weight: 950;
+  text-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.55),
+    0 0 20px rgba(96, 165, 250, 0.08);
+}
+
+.imprintSectionCard p {
+  margin: 0;
+  color: #a9bbd4;
+  font-size: 15px;
+  line-height: 1.72;
+  font-weight: 700;
+}
+
+.imprintContactCard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 22px;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.imprintContactActions {
+  display: grid;
+  gap: 12px;
+  min-width: 280px;
+}
+
+.imprintContactActions a {
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 950;
+  border: 1px solid rgba(191, 219, 254, 0.22);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.12), transparent 42%),
+    linear-gradient(135deg, rgba(37, 99, 235, 0.42), rgba(14, 165, 233, 0.16));
+  box-shadow:
+    0 18px 38px rgba(37, 99, 235, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition:
+    transform 0.22s ease,
+    filter 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.imprintContactActions a:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.1);
+  box-shadow:
+    0 24px 52px rgba(0, 0, 0, 0.36),
+    0 0 38px rgba(96, 165, 250, 0.18);
+}
+
+@media (max-width: 980px) {
+  .imprintContentGrid,
+  .imprintHeroGrid,
+  .imprintBusinessCard,
+  .imprintContactCard {
+    grid-template-columns: 1fr;
+  }
+
+  .imprintContactActions {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .imprintPagePro {
+    padding: 64px 18px 70px;
+  }
+
+  .imprintHero {
+    padding: 36px 0 30px;
+  }
+
+  .imprintHero h1 {
+    font-size: 46px;
+    letter-spacing: -2px;
+  }
+
+  .imprintHero p {
+    font-size: 16px;
+  }
+
+  .imprintIntroCard,
+  .imprintBusinessCard,
+  .imprintDisclaimerCard,
+  .imprintContactCard {
+    border-radius: 28px;
+    padding: 24px;
+  }
+
+  .imprintIntroCard,
+  .imprintDisclaimerCard {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .imprintSectionCard {
+    min-height: auto;
+    border-radius: 26px;
+    padding: 22px;
+  }
+
+  .imprintFloatingLayer {
+    opacity: 0.45;
+  }
+}
+
+@media (max-width: 480px) {
+  .imprintPagePro {
+    padding: 54px 14px 60px;
+  }
+
+  .imprintHero h1 {
+    font-size: 38px;
+    line-height: 0.98;
+  }
+
+  .imprintBadge {
+    font-size: 10px;
+    padding: 10px 13px;
+  }
+
+  .imprintSectionTop {
+    flex-direction: column;
+  }
+
+  .imprintSectionTop h2 {
+    font-size: 22px;
+  }
+
+  .imprintBusinessGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .imprintContactActions a {
+    justify-content: flex-start;
+    word-break: break-word;
+  }
+
+  .imprintFloatingLayer {
+    display: none;
+  }
+}
