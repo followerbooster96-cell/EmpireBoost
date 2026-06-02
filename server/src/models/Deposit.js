@@ -33,36 +33,55 @@ const depositSchema = new mongoose.Schema(
 
     method: {
       type: String,
-      enum: ["revolut", "crypto", "bank", "paypal", "manual"],
+      enum: [
+        "payeer",
+        "crypto",
+        "revolut",
+        "skrill",
+        "bank",
+        "paypal",
+        "manual",
+      ],
       default: "manual",
+      lowercase: true,
+      trim: true,
     },
 
     paymentReference: {
       type: String,
       required: true,
       unique: true,
+      trim: true,
     },
 
     userNote: {
       type: String,
       default: "",
+      trim: true,
     },
 
     status: {
       type: String,
       enum: ["pending", "approved", "rejected"],
       default: "pending",
+      lowercase: true,
+      trim: true,
     },
 
     adminNote: {
       type: String,
       default: "",
+      trim: true,
     },
   },
   {
     timestamps: true,
   }
 );
+
+depositSchema.index({ userId: 1, createdAt: -1 });
+depositSchema.index({ status: 1, createdAt: -1 });
+depositSchema.index({ method: 1, createdAt: -1 });
 
 const Deposit = mongoose.model("Deposit", depositSchema);
 

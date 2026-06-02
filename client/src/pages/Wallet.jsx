@@ -6,21 +6,20 @@ import "./Wallet.css";
 
 const WALLET_TRANSLATIONS = {
   en: {
-    paypal: "PayPal",
+    payeer: "Payeer",
     crypto: "Crypto",
     revolut: "Revolut",
-    bank: "Bank",
-    automatic: "Automatic",
+    skrill: "Skrill",
     manual: "Manual",
-    instant: "Instant",
+    instant: "Fast",
     backup: "Backup",
     fast: "Fast",
     classic: "Classic",
 
-    paypalDescription: "Real checkout with automatic wallet credit.",
+    payeerDescription: "Payeer top-up request with payment reference.",
     cryptoDescription: "USDT, BTC or ETH request for manual verification.",
     revolutDescription: "Quick Revolut top-up request with payment note.",
-    bankDescription: "Bank transfer request with reference check.",
+    skrillDescription: "Skrill top-up request with email or payment note.",
 
     floatingWallet: "Wallet",
     floatingBalance: "Balance",
@@ -37,18 +36,14 @@ const WALLET_TRANSLATIONS = {
     floatingPayments: "Payments",
     floatingTracking: "Tracking",
 
-    paypalCancelled: "PayPal payment was cancelled.",
-    paypalConfirming: "Confirming PayPal payment...",
-    paypalCompleted: "Payment completed. New wallet balance:",
-    paypalConfirmationFailed: "PayPal payment confirmation failed.",
     requestCreated: "request created successfully.",
     enterMinimum: "Please enter at least 1.00 EUR.",
     couldNotCreatePayment: "Could not create payment.",
 
-    heroBadge: "Premium wallet checkout",
-    heroTitle: "Fund your wallet with trusted payment options.",
+    heroBadge: "Premium wallet top-up",
+    heroTitle: "Fund your wallet with flexible payment options.",
     heroText:
-      "PayPal runs as automatic checkout. Crypto, Revolut and bank transfer are clean backup methods for customers who prefer alternative payments.",
+      "Choose Payeer, Crypto, Revolut or Skrill. All top-ups are created as secure deposit requests and reviewed before the balance is credited.",
     addFunds: "Add Funds",
     paymentHistory: "Payment History",
 
@@ -61,64 +56,60 @@ const WALLET_TRANSLATIONS = {
     walletBalance: "Wallet balance",
     readyToSpend: "Ready to spend on services",
     totalDeposited: "Total deposited",
-    completedPaymentsOnly: "Completed payments only",
-    pendingPayments: "Pending payments",
-    waitingNotCaptured: "Waiting or not captured yet",
-    totalPayments: "Total payments",
-    allAttempts: "All payment attempts",
+    completedPaymentsOnly: "Approved deposits only",
+    pendingPayments: "Pending deposits",
+    waitingNotCaptured: "Waiting for admin review",
+    totalPayments: "Total deposits",
+    allAttempts: "All deposit requests",
 
     addFundsPanel: "Add funds",
-    payWithPaypal: "Pay with PayPal",
-    payWithCrypto: "Pay with Crypto",
-    payWithRevolut: "Pay with Revolut",
-    bankTransfer: "Bank transfer",
+    payWithPayeer: "Top up with Payeer",
+    payWithCrypto: "Top up with Crypto",
+    payWithRevolut: "Top up with Revolut",
+    payWithSkrill: "Top up with Skrill",
 
-    paypalLong:
-      "You will be redirected to PayPal. After payment, your wallet balance updates automatically.",
+    payeerLong:
+      "Create a Payeer deposit request. Add your Payeer account, transaction ID or payment note so admin can verify it.",
     cryptoLong:
-      "Submit a crypto payment request. Add your transaction hash or wallet note so admin can verify it.",
+      "Create a crypto deposit request. Add your transaction hash, wallet note, network and coin so admin can verify it.",
     revolutLong:
-      "Submit a Revolut payment request. Add your Revolut name or transfer note for faster approval.",
-    bankLong:
-      "Submit a bank transfer request. Add your sender name or bank reference in the note.",
+      "Create a Revolut deposit request. Add your Revolut name or transfer note for faster approval.",
+    skrillLong:
+      "Create a Skrill deposit request. Add your Skrill email, transaction ID or payment note for faster approval.",
 
     topupAmount: "Top-up amount",
     exampleAmount: "Example: 25.00",
     paymentCurrency: "Payment currency",
     promoOptional: "Promo code optional",
     promoPlaceholder: "Example: BOOST10",
-    noteOptional: "Payment note optional",
-    notePlaceholder: "Tx hash, Revolut name or bank note",
-    automaticCheckout: "Automatic checkout",
-    backupMethod: "Backup method",
+    noteOptional: "Payment note required",
+    notePlaceholder: "Transaction ID, email, wallet hash, Revolut name...",
+    backupMethod: "Manual verification",
     paymentPreview: "Payment preview",
-    paypalPreview: "You pay in EUR. Display preview is shown in",
     manualPreview: "Request is created in EUR. Display preview is shown in",
-    redirectingPaypal: "Redirecting to PayPal...",
     creatingRequest: "Creating request...",
-    confirmingPayment: "Confirming payment...",
     createRequest: "Create",
     request: "Request",
     currencyInfo:
-      "Real wallet and payment calculations stay in EUR. The selected currency is only a display conversion so pricing stays safe and clear.",
+      "Wallet and payment calculations stay in EUR. The selected currency is only a display conversion so pricing stays safe and clear.",
 
     paymentGuide: "Payment guide",
     howItWorks: "How it works",
     stepOneTitle: "Choose method",
-    stepOneText: "Select PayPal, Crypto, Revolut or bank transfer.",
+    stepOneText: "Select Payeer, Crypto, Revolut or Skrill.",
     stepTwoTitle: "Enter amount",
-    stepTwoText: "Payment amount is entered in EUR to keep checkout accurate.",
-    stepThreeTitle: "Pay or submit",
+    stepTwoText: "Payment amount is entered in EUR to keep wallet accounting accurate.",
+    stepThreeTitle: "Submit proof",
     stepThreeText:
-      "PayPal redirects instantly. Other methods create a backup request.",
+      "Add your transaction ID, payment note, crypto hash or account reference.",
     stepFourTitle: "Balance updates",
     stepFourText:
-      "Wallet updates in EUR, while your selected currency controls display.",
+      "Admin reviews the request and credits your wallet after confirmation.",
 
-    myPayments: "My payments",
-    noPaymentsYet: "No payments yet",
+    myPayments: "My deposits",
+    noPaymentsYet: "No deposits yet",
     noPaymentsText:
-      "Your PayPal, Crypto, Revolut and bank payments will appear here.",
+      "Your Payeer, Crypto, Revolut and Skrill deposit requests will appear here.",
     provider: "Provider",
     reference: "Reference",
     amount: "Amount",
@@ -130,21 +121,20 @@ const WALLET_TRANSLATIONS = {
   },
 
   de: {
-    paypal: "PayPal",
+    payeer: "Payeer",
     crypto: "Crypto",
     revolut: "Revolut",
-    bank: "Bank",
-    automatic: "Automatisch",
+    skrill: "Skrill",
     manual: "Manuell",
-    instant: "Sofort",
+    instant: "Schnell",
     backup: "Backup",
     fast: "Schnell",
     classic: "Klassisch",
 
-    paypalDescription: "Echter Checkout mit automatischer Wallet-Gutschrift.",
+    payeerDescription: "Payeer-Aufladung mit Zahlungsreferenz.",
     cryptoDescription: "USDT, BTC oder ETH Anfrage zur manuellen Prüfung.",
     revolutDescription: "Schnelle Revolut-Aufladung mit Zahlungsnotiz.",
-    bankDescription: "Banküberweisung mit Referenzprüfung.",
+    skrillDescription: "Skrill-Aufladung mit E-Mail oder Zahlungsnotiz.",
 
     floatingWallet: "Wallet",
     floatingBalance: "Guthaben",
@@ -161,18 +151,14 @@ const WALLET_TRANSLATIONS = {
     floatingPayments: "Zahlungen",
     floatingTracking: "Tracking",
 
-    paypalCancelled: "PayPal-Zahlung wurde abgebrochen.",
-    paypalConfirming: "PayPal-Zahlung wird bestätigt...",
-    paypalCompleted: "Zahlung abgeschlossen. Neues Wallet-Guthaben:",
-    paypalConfirmationFailed: "PayPal-Zahlung konnte nicht bestätigt werden.",
     requestCreated: "Anfrage erfolgreich erstellt.",
     enterMinimum: "Bitte gib mindestens 1.00 EUR ein.",
     couldNotCreatePayment: "Zahlung konnte nicht erstellt werden.",
 
-    heroBadge: "Premium Wallet Checkout",
-    heroTitle: "Lade dein Wallet mit sicheren Zahlungsmethoden auf.",
+    heroBadge: "Premium Wallet Aufladung",
+    heroTitle: "Lade dein Wallet mit flexiblen Zahlungsmethoden auf.",
     heroText:
-      "PayPal läuft als automatischer Checkout. Crypto, Revolut und Banküberweisung sind saubere Backup-Methoden für Kunden, die alternative Zahlungen bevorzugen.",
+      "Wähle Payeer, Crypto, Revolut oder Skrill. Alle Aufladungen werden als sichere Deposit-Anfragen erstellt und vor der Gutschrift geprüft.",
     addFunds: "Guthaben aufladen",
     paymentHistory: "Zahlungsverlauf",
 
@@ -185,64 +171,60 @@ const WALLET_TRANSLATIONS = {
     walletBalance: "Wallet-Guthaben",
     readyToSpend: "Bereit für Services",
     totalDeposited: "Gesamt eingezahlt",
-    completedPaymentsOnly: "Nur abgeschlossene Zahlungen",
-    pendingPayments: "Ausstehende Zahlungen",
-    waitingNotCaptured: "Wartend oder noch nicht bestätigt",
-    totalPayments: "Zahlungen gesamt",
-    allAttempts: "Alle Zahlungsversuche",
+    completedPaymentsOnly: "Nur genehmigte Deposits",
+    pendingPayments: "Ausstehende Deposits",
+    waitingNotCaptured: "Wartet auf Admin-Prüfung",
+    totalPayments: "Deposits gesamt",
+    allAttempts: "Alle Deposit-Anfragen",
 
     addFundsPanel: "Guthaben aufladen",
-    payWithPaypal: "Mit PayPal zahlen",
-    payWithCrypto: "Mit Crypto zahlen",
-    payWithRevolut: "Mit Revolut zahlen",
-    bankTransfer: "Banküberweisung",
+    payWithPayeer: "Mit Payeer aufladen",
+    payWithCrypto: "Mit Crypto aufladen",
+    payWithRevolut: "Mit Revolut aufladen",
+    payWithSkrill: "Mit Skrill aufladen",
 
-    paypalLong:
-      "Du wirst zu PayPal weitergeleitet. Nach der Zahlung wird dein Wallet automatisch aktualisiert.",
+    payeerLong:
+      "Erstelle eine Payeer-Deposit-Anfrage. Füge Payeer-Konto, Transaction-ID oder Zahlungsnotiz hinzu, damit Admin es prüfen kann.",
     cryptoLong:
-      "Erstelle eine Crypto-Zahlungsanfrage. Füge Tx-Hash oder Wallet-Notiz hinzu, damit Admin es prüfen kann.",
+      "Erstelle eine Crypto-Deposit-Anfrage. Füge Tx-Hash, Wallet-Notiz, Netzwerk und Coin hinzu, damit Admin es prüfen kann.",
     revolutLong:
-      "Erstelle eine Revolut-Zahlungsanfrage. Füge deinen Revolut-Namen oder Transferhinweis für schnellere Prüfung hinzu.",
-    bankLong:
-      "Erstelle eine Banküberweisungsanfrage. Füge Absendername oder Bankreferenz in die Notiz ein.",
+      "Erstelle eine Revolut-Deposit-Anfrage. Füge deinen Revolut-Namen oder Transferhinweis für schnellere Prüfung hinzu.",
+    skrillLong:
+      "Erstelle eine Skrill-Deposit-Anfrage. Füge deine Skrill-E-Mail, Transaction-ID oder Zahlungsnotiz hinzu.",
 
     topupAmount: "Aufladebetrag",
     exampleAmount: "Beispiel: 25.00",
     paymentCurrency: "Zahlungswährung",
     promoOptional: "Promo-Code optional",
     promoPlaceholder: "Beispiel: BOOST10",
-    noteOptional: "Zahlungsnotiz optional",
-    notePlaceholder: "Tx-Hash, Revolut-Name oder Banknotiz",
-    automaticCheckout: "Automatischer Checkout",
-    backupMethod: "Backup-Methode",
+    noteOptional: "Zahlungsnotiz erforderlich",
+    notePlaceholder: "Transaction-ID, E-Mail, Wallet-Hash, Revolut-Name...",
+    backupMethod: "Manuelle Prüfung",
     paymentPreview: "Zahlungsvorschau",
-    paypalPreview: "Du zahlst in EUR. Vorschau wird angezeigt in",
     manualPreview: "Anfrage wird in EUR erstellt. Vorschau wird angezeigt in",
-    redirectingPaypal: "Weiterleitung zu PayPal...",
     creatingRequest: "Anfrage wird erstellt...",
-    confirmingPayment: "Zahlung wird bestätigt...",
     createRequest: "Erstelle",
     request: "Anfrage",
     currencyInfo:
-      "Wallet- und Zahlungsberechnungen bleiben in EUR. Die ausgewählte Währung ist nur eine Anzeigeumrechnung, damit Preise sicher und klar bleiben.",
+      "Wallet- und Zahlungsberechnungen bleiben in EUR. Die ausgewählte Währung ist nur eine Anzeigeumrechnung.",
 
     paymentGuide: "Zahlungsanleitung",
     howItWorks: "So funktioniert es",
     stepOneTitle: "Methode wählen",
-    stepOneText: "Wähle PayPal, Crypto, Revolut oder Banküberweisung.",
+    stepOneText: "Wähle Payeer, Crypto, Revolut oder Skrill.",
     stepTwoTitle: "Betrag eingeben",
-    stepTwoText: "Der Zahlungsbetrag wird in EUR eingegeben, damit der Checkout korrekt bleibt.",
-    stepThreeTitle: "Zahlen oder senden",
+    stepTwoText: "Der Zahlungsbetrag wird in EUR eingegeben, damit die Wallet korrekt bleibt.",
+    stepThreeTitle: "Nachweis senden",
     stepThreeText:
-      "PayPal leitet sofort weiter. Andere Methoden erstellen eine Backup-Anfrage.",
+      "Füge Transaction-ID, Zahlungsnotiz, Crypto-Hash oder Account-Referenz hinzu.",
     stepFourTitle: "Guthaben aktualisiert",
     stepFourText:
-      "Wallet wird in EUR aktualisiert, während deine ausgewählte Währung nur die Anzeige steuert.",
+      "Admin prüft die Anfrage und schreibt dein Wallet nach Bestätigung gut.",
 
-    myPayments: "Meine Zahlungen",
-    noPaymentsYet: "Noch keine Zahlungen",
+    myPayments: "Meine Deposits",
+    noPaymentsYet: "Noch keine Deposits",
     noPaymentsText:
-      "Deine PayPal-, Crypto-, Revolut- und Bankzahlungen erscheinen hier.",
+      "Deine Payeer-, Crypto-, Revolut- und Skrill-Deposit-Anfragen erscheinen hier.",
     provider: "Anbieter",
     reference: "Referenz",
     amount: "Betrag",
@@ -254,21 +236,20 @@ const WALLET_TRANSLATIONS = {
   },
 
   es: {
-    paypal: "PayPal",
+    payeer: "Payeer",
     crypto: "Crypto",
     revolut: "Revolut",
-    bank: "Banco",
-    automatic: "Automático",
+    skrill: "Skrill",
     manual: "Manual",
-    instant: "Instantáneo",
+    instant: "Rápido",
     backup: "Backup",
     fast: "Rápido",
     classic: "Clásico",
 
-    paypalDescription: "Checkout real con crédito automático en wallet.",
+    payeerDescription: "Solicitud Payeer con referencia de pago.",
     cryptoDescription: "Solicitud USDT, BTC o ETH para verificación manual.",
     revolutDescription: "Solicitud rápida de Revolut con nota de pago.",
-    bankDescription: "Transferencia bancaria con revisión de referencia.",
+    skrillDescription: "Solicitud Skrill con email o nota de pago.",
 
     floatingWallet: "Wallet",
     floatingBalance: "Saldo",
@@ -285,18 +266,14 @@ const WALLET_TRANSLATIONS = {
     floatingPayments: "Pagos",
     floatingTracking: "Tracking",
 
-    paypalCancelled: "El pago de PayPal fue cancelado.",
-    paypalConfirming: "Confirmando pago de PayPal...",
-    paypalCompleted: "Pago completado. Nuevo saldo wallet:",
-    paypalConfirmationFailed: "La confirmación de PayPal falló.",
     requestCreated: "solicitud creada correctamente.",
     enterMinimum: "Introduce al menos 1.00 EUR.",
     couldNotCreatePayment: "No se pudo crear el pago.",
 
-    heroBadge: "Checkout wallet premium",
-    heroTitle: "Añade fondos a tu wallet con métodos de pago confiables.",
+    heroBadge: "Recarga wallet premium",
+    heroTitle: "Añade fondos a tu wallet con métodos flexibles.",
     heroText:
-      "PayPal funciona como checkout automático. Crypto, Revolut y banco son métodos backup limpios para clientes que prefieren pagos alternativos.",
+      "Elige Payeer, Crypto, Revolut o Skrill. Todas las recargas se crean como solicitudes seguras y se revisan antes de acreditar el saldo.",
     addFunds: "Añadir fondos",
     paymentHistory: "Historial de pagos",
 
@@ -309,64 +286,60 @@ const WALLET_TRANSLATIONS = {
     walletBalance: "Saldo wallet",
     readyToSpend: "Listo para usar en servicios",
     totalDeposited: "Total depositado",
-    completedPaymentsOnly: "Solo pagos completados",
-    pendingPayments: "Pagos pendientes",
-    waitingNotCaptured: "Esperando o no capturado",
-    totalPayments: "Pagos totales",
-    allAttempts: "Todos los intentos",
+    completedPaymentsOnly: "Solo depósitos aprobados",
+    pendingPayments: "Depósitos pendientes",
+    waitingNotCaptured: "Esperando revisión admin",
+    totalPayments: "Depósitos totales",
+    allAttempts: "Todas las solicitudes",
 
     addFundsPanel: "Añadir fondos",
-    payWithPaypal: "Pagar con PayPal",
-    payWithCrypto: "Pagar con Crypto",
-    payWithRevolut: "Pagar con Revolut",
-    bankTransfer: "Transferencia bancaria",
+    payWithPayeer: "Recargar con Payeer",
+    payWithCrypto: "Recargar con Crypto",
+    payWithRevolut: "Recargar con Revolut",
+    payWithSkrill: "Recargar con Skrill",
 
-    paypalLong:
-      "Serás redirigido a PayPal. Después del pago, tu wallet se actualiza automáticamente.",
+    payeerLong:
+      "Crea una solicitud Payeer. Añade tu cuenta Payeer, ID de transacción o nota de pago.",
     cryptoLong:
-      "Envía una solicitud de pago crypto. Añade tu hash o nota para que admin pueda verificarlo.",
+      "Crea una solicitud crypto. Añade hash, nota wallet, red y moneda para verificación.",
     revolutLong:
-      "Envía una solicitud Revolut. Añade tu nombre Revolut o nota de transferencia para aprobación rápida.",
-    bankLong:
-      "Envía una solicitud de transferencia bancaria. Añade el nombre del remitente o referencia bancaria.",
+      "Crea una solicitud Revolut. Añade tu nombre Revolut o nota de transferencia.",
+    skrillLong:
+      "Crea una solicitud Skrill. Añade tu email Skrill, ID de transacción o nota de pago.",
 
     topupAmount: "Cantidad de recarga",
     exampleAmount: "Ejemplo: 25.00",
     paymentCurrency: "Moneda de pago",
     promoOptional: "Código promo opcional",
     promoPlaceholder: "Ejemplo: BOOST10",
-    noteOptional: "Nota de pago opcional",
-    notePlaceholder: "Tx hash, nombre Revolut o nota bancaria",
-    automaticCheckout: "Checkout automático",
-    backupMethod: "Método backup",
+    noteOptional: "Nota de pago requerida",
+    notePlaceholder: "ID transacción, email, wallet hash, nombre Revolut...",
+    backupMethod: "Verificación manual",
     paymentPreview: "Vista previa del pago",
-    paypalPreview: "Pagas en EUR. Vista previa mostrada en",
     manualPreview: "La solicitud se crea en EUR. Vista previa mostrada en",
-    redirectingPaypal: "Redirigiendo a PayPal...",
     creatingRequest: "Creando solicitud...",
-    confirmingPayment: "Confirmando pago...",
     createRequest: "Crear",
     request: "Solicitud",
     currencyInfo:
-      "Los cálculos reales de wallet y pagos se mantienen en EUR. La moneda seleccionada es solo una conversión visual para mantener precios claros.",
+      "Los cálculos reales de wallet y pagos se mantienen en EUR. La moneda seleccionada es solo una conversión visual.",
 
     paymentGuide: "Guía de pago",
     howItWorks: "Cómo funciona",
     stepOneTitle: "Elige método",
-    stepOneText: "Selecciona PayPal, Crypto, Revolut o transferencia bancaria.",
+    stepOneText: "Selecciona Payeer, Crypto, Revolut o Skrill.",
     stepTwoTitle: "Introduce cantidad",
-    stepTwoText: "La cantidad se introduce en EUR para mantener el checkout correcto.",
-    stepThreeTitle: "Paga o envía",
+    stepTwoText: "La cantidad se introduce en EUR para mantener el wallet correcto.",
+    stepThreeTitle: "Envía prueba",
     stepThreeText:
-      "PayPal redirige al instante. Otros métodos crean una solicitud backup.",
+      "Añade ID de transacción, nota de pago, crypto hash o referencia.",
     stepFourTitle: "Saldo actualizado",
     stepFourText:
-      "Wallet se actualiza en EUR, mientras la moneda seleccionada controla la visualización.",
+      "Admin revisa la solicitud y acredita el wallet tras confirmación.",
 
-    myPayments: "Mis pagos",
-    noPaymentsYet: "Aún no hay pagos",
+    myPayments: "Mis depósitos",
+    noPaymentsYet: "Aún no hay depósitos",
     noPaymentsText:
-      "Tus pagos de PayPal, Crypto, Revolut y banco aparecerán aquí.",
+      "Tus solicitudes de Payeer, Crypto, Revolut y Skrill aparecerán aquí.",
     provider: "Proveedor",
     reference: "Referencia",
     amount: "Cantidad",
@@ -378,21 +351,20 @@ const WALLET_TRANSLATIONS = {
   },
 
   fr: {
-    paypal: "PayPal",
+    payeer: "Payeer",
     crypto: "Crypto",
     revolut: "Revolut",
-    bank: "Banque",
-    automatic: "Automatique",
+    skrill: "Skrill",
     manual: "Manuel",
-    instant: "Instant",
+    instant: "Rapide",
     backup: "Backup",
     fast: "Rapide",
     classic: "Classique",
 
-    paypalDescription: "Checkout réel avec crédit wallet automatique.",
+    payeerDescription: "Demande Payeer avec référence de paiement.",
     cryptoDescription: "Demande USDT, BTC ou ETH pour vérification manuelle.",
     revolutDescription: "Demande Revolut rapide avec note de paiement.",
-    bankDescription: "Virement bancaire avec vérification de référence.",
+    skrillDescription: "Demande Skrill avec email ou note de paiement.",
 
     floatingWallet: "Wallet",
     floatingBalance: "Solde",
@@ -409,18 +381,14 @@ const WALLET_TRANSLATIONS = {
     floatingPayments: "Paiements",
     floatingTracking: "Tracking",
 
-    paypalCancelled: "Le paiement PayPal a été annulé.",
-    paypalConfirming: "Confirmation du paiement PayPal...",
-    paypalCompleted: "Paiement terminé. Nouveau solde wallet :",
-    paypalConfirmationFailed: "La confirmation PayPal a échoué.",
     requestCreated: "demande créée avec succès.",
     enterMinimum: "Veuillez entrer au moins 1.00 EUR.",
     couldNotCreatePayment: "Impossible de créer le paiement.",
 
-    heroBadge: "Checkout wallet premium",
-    heroTitle: "Rechargez votre wallet avec des options de paiement fiables.",
+    heroBadge: "Recharge wallet premium",
+    heroTitle: "Rechargez votre wallet avec des méthodes flexibles.",
     heroText:
-      "PayPal fonctionne en checkout automatique. Crypto, Revolut et virement bancaire sont des méthodes backup propres pour les clients qui préfèrent les paiements alternatifs.",
+      "Choisissez Payeer, Crypto, Revolut ou Skrill. Toutes les recharges sont créées comme demandes sécurisées et vérifiées avant crédit.",
     addFunds: "Ajouter des fonds",
     paymentHistory: "Historique paiements",
 
@@ -433,42 +401,38 @@ const WALLET_TRANSLATIONS = {
     walletBalance: "Solde wallet",
     readyToSpend: "Prêt pour les services",
     totalDeposited: "Total déposé",
-    completedPaymentsOnly: "Paiements terminés uniquement",
-    pendingPayments: "Paiements en attente",
-    waitingNotCaptured: "En attente ou non capturé",
-    totalPayments: "Paiements total",
-    allAttempts: "Toutes les tentatives",
+    completedPaymentsOnly: "Dépôts approuvés uniquement",
+    pendingPayments: "Dépôts en attente",
+    waitingNotCaptured: "En attente de vérification admin",
+    totalPayments: "Dépôts total",
+    allAttempts: "Toutes les demandes",
 
     addFundsPanel: "Ajouter des fonds",
-    payWithPaypal: "Payer avec PayPal",
-    payWithCrypto: "Payer avec Crypto",
-    payWithRevolut: "Payer avec Revolut",
-    bankTransfer: "Virement bancaire",
+    payWithPayeer: "Recharger avec Payeer",
+    payWithCrypto: "Recharger avec Crypto",
+    payWithRevolut: "Recharger avec Revolut",
+    payWithSkrill: "Recharger avec Skrill",
 
-    paypalLong:
-      "Vous serez redirigé vers PayPal. Après le paiement, votre wallet se met à jour automatiquement.",
+    payeerLong:
+      "Créez une demande Payeer. Ajoutez votre compte Payeer, ID transaction ou note de paiement.",
     cryptoLong:
-      "Envoyez une demande crypto. Ajoutez le hash ou une note wallet pour vérification admin.",
+      "Créez une demande crypto. Ajoutez hash, note wallet, réseau et coin pour vérification.",
     revolutLong:
-      "Envoyez une demande Revolut. Ajoutez votre nom Revolut ou note de transfert pour approbation rapide.",
-    bankLong:
-      "Envoyez une demande de virement bancaire. Ajoutez le nom expéditeur ou référence bancaire.",
+      "Créez une demande Revolut. Ajoutez votre nom Revolut ou note de transfert.",
+    skrillLong:
+      "Créez une demande Skrill. Ajoutez votre email Skrill, ID transaction ou note de paiement.",
 
     topupAmount: "Montant recharge",
     exampleAmount: "Exemple : 25.00",
     paymentCurrency: "Devise paiement",
     promoOptional: "Code promo optionnel",
     promoPlaceholder: "Exemple : BOOST10",
-    noteOptional: "Note paiement optionnelle",
-    notePlaceholder: "Tx hash, nom Revolut ou note bancaire",
-    automaticCheckout: "Checkout automatique",
-    backupMethod: "Méthode backup",
+    noteOptional: "Note paiement requise",
+    notePlaceholder: "ID transaction, email, wallet hash, nom Revolut...",
+    backupMethod: "Vérification manuelle",
     paymentPreview: "Aperçu paiement",
-    paypalPreview: "Vous payez en EUR. Aperçu affiché en",
     manualPreview: "La demande est créée en EUR. Aperçu affiché en",
-    redirectingPaypal: "Redirection vers PayPal...",
     creatingRequest: "Création demande...",
-    confirmingPayment: "Confirmation paiement...",
     createRequest: "Créer",
     request: "Demande",
     currencyInfo:
@@ -477,20 +441,20 @@ const WALLET_TRANSLATIONS = {
     paymentGuide: "Guide paiement",
     howItWorks: "Comment ça marche",
     stepOneTitle: "Choisir méthode",
-    stepOneText: "Sélectionnez PayPal, Crypto, Revolut ou virement bancaire.",
+    stepOneText: "Sélectionnez Payeer, Crypto, Revolut ou Skrill.",
     stepTwoTitle: "Entrer montant",
-    stepTwoText: "Le montant est entré en EUR pour garder le checkout correct.",
-    stepThreeTitle: "Payer ou envoyer",
+    stepTwoText: "Le montant est entré en EUR pour garder le wallet correct.",
+    stepThreeTitle: "Envoyer preuve",
     stepThreeText:
-      "PayPal redirige instantanément. Les autres méthodes créent une demande backup.",
+      "Ajoutez ID transaction, note paiement, crypto hash ou référence.",
     stepFourTitle: "Solde mis à jour",
     stepFourText:
-      "Wallet se met à jour en EUR, pendant que la devise choisie contrôle l’affichage.",
+      "Admin vérifie la demande et crédite le wallet après confirmation.",
 
-    myPayments: "Mes paiements",
-    noPaymentsYet: "Aucun paiement",
+    myPayments: "Mes dépôts",
+    noPaymentsYet: "Aucun dépôt",
     noPaymentsText:
-      "Vos paiements PayPal, Crypto, Revolut et banque apparaîtront ici.",
+      "Vos demandes Payeer, Crypto, Revolut et Skrill apparaîtront ici.",
     provider: "Fournisseur",
     reference: "Référence",
     amount: "Montant",
@@ -502,21 +466,20 @@ const WALLET_TRANSLATIONS = {
   },
 
   ru: {
-    paypal: "PayPal",
+    payeer: "Payeer",
     crypto: "Crypto",
     revolut: "Revolut",
-    bank: "Банк",
-    automatic: "Автоматически",
+    skrill: "Skrill",
     manual: "Вручную",
-    instant: "Мгновенно",
+    instant: "Быстро",
     backup: "Backup",
     fast: "Быстро",
     classic: "Классика",
 
-    paypalDescription: "Реальный checkout с автоматическим пополнением wallet.",
+    payeerDescription: "Payeer top-up запрос с payment reference.",
     cryptoDescription: "USDT, BTC или ETH запрос для ручной проверки.",
     revolutDescription: "Быстрый Revolut top-up запрос с платежной заметкой.",
-    bankDescription: "Банковский перевод с проверкой reference.",
+    skrillDescription: "Skrill top-up запрос с email или payment note.",
 
     floatingWallet: "Wallet",
     floatingBalance: "Баланс",
@@ -533,18 +496,14 @@ const WALLET_TRANSLATIONS = {
     floatingPayments: "Payments",
     floatingTracking: "Tracking",
 
-    paypalCancelled: "PayPal платеж был отменён.",
-    paypalConfirming: "Подтверждение PayPal платежа...",
-    paypalCompleted: "Платёж завершён. Новый wallet баланс:",
-    paypalConfirmationFailed: "Подтверждение PayPal платежа не удалось.",
     requestCreated: "запрос успешно создан.",
     enterMinimum: "Введите минимум 1.00 EUR.",
     couldNotCreatePayment: "Не удалось создать платёж.",
 
-    heroBadge: "Premium wallet checkout",
-    heroTitle: "Пополняй wallet надёжными способами оплаты.",
+    heroBadge: "Premium wallet top-up",
+    heroTitle: "Пополняй wallet гибкими способами оплаты.",
     heroText:
-      "PayPal работает как автоматический checkout. Crypto, Revolut и bank transfer — чистые backup-методы для клиентов, которые предпочитают альтернативные платежи.",
+      "Выбери Payeer, Crypto, Revolut или Skrill. Все пополнения создаются как deposit requests и проверяются перед зачислением.",
     addFunds: "Пополнить",
     paymentHistory: "История платежей",
 
@@ -557,42 +516,38 @@ const WALLET_TRANSLATIONS = {
     walletBalance: "Wallet баланс",
     readyToSpend: "Готово для services",
     totalDeposited: "Всего пополнено",
-    completedPaymentsOnly: "Только завершённые платежи",
-    pendingPayments: "Ожидающие платежи",
-    waitingNotCaptured: "Ожидает или не подтверждено",
-    totalPayments: "Всего платежей",
-    allAttempts: "Все попытки платежей",
+    completedPaymentsOnly: "Только approved deposits",
+    pendingPayments: "Ожидающие deposits",
+    waitingNotCaptured: "Ждет admin review",
+    totalPayments: "Всего deposits",
+    allAttempts: "Все deposit requests",
 
     addFundsPanel: "Пополнить wallet",
-    payWithPaypal: "Оплатить PayPal",
-    payWithCrypto: "Оплатить Crypto",
-    payWithRevolut: "Оплатить Revolut",
-    bankTransfer: "Банковский перевод",
+    payWithPayeer: "Пополнить Payeer",
+    payWithCrypto: "Пополнить Crypto",
+    payWithRevolut: "Пополнить Revolut",
+    payWithSkrill: "Пополнить Skrill",
 
-    paypalLong:
-      "Вы будете перенаправлены в PayPal. После оплаты wallet обновится автоматически.",
+    payeerLong:
+      "Создай Payeer deposit request. Добавь Payeer account, transaction ID или payment note.",
     cryptoLong:
-      "Создай crypto payment request. Добавь transaction hash или wallet note для проверки админом.",
+      "Создай crypto deposit request. Добавь transaction hash, wallet note, network и coin.",
     revolutLong:
-      "Создай Revolut payment request. Добавь Revolut имя или transfer note для быстрой проверки.",
-    bankLong:
-      "Создай bank transfer request. Добавь sender name или bank reference в заметку.",
+      "Создай Revolut deposit request. Добавь Revolut name или transfer note.",
+    skrillLong:
+      "Создай Skrill deposit request. Добавь Skrill email, transaction ID или payment note.",
 
     topupAmount: "Сумма пополнения",
     exampleAmount: "Пример: 25.00",
     paymentCurrency: "Валюта оплаты",
     promoOptional: "Promo code optional",
     promoPlaceholder: "Пример: BOOST10",
-    noteOptional: "Payment note optional",
-    notePlaceholder: "Tx hash, Revolut name или bank note",
-    automaticCheckout: "Automatic checkout",
-    backupMethod: "Backup method",
+    noteOptional: "Payment note required",
+    notePlaceholder: "Transaction ID, email, wallet hash, Revolut name...",
+    backupMethod: "Manual verification",
     paymentPreview: "Payment preview",
-    paypalPreview: "Ты платишь в EUR. Preview показан в",
     manualPreview: "Запрос создаётся в EUR. Preview показан в",
-    redirectingPaypal: "Переход в PayPal...",
     creatingRequest: "Создание запроса...",
-    confirmingPayment: "Подтверждение платежа...",
     createRequest: "Создать",
     request: "Запрос",
     currencyInfo:
@@ -601,20 +556,20 @@ const WALLET_TRANSLATIONS = {
     paymentGuide: "Payment guide",
     howItWorks: "Как это работает",
     stepOneTitle: "Выбери метод",
-    stepOneText: "Выбери PayPal, Crypto, Revolut или bank transfer.",
+    stepOneText: "Выбери Payeer, Crypto, Revolut или Skrill.",
     stepTwoTitle: "Введи сумму",
-    stepTwoText: "Сумма вводится в EUR, чтобы checkout был точным.",
-    stepThreeTitle: "Оплати или отправь",
+    stepTwoText: "Сумма вводится в EUR, чтобы wallet accounting был точным.",
+    stepThreeTitle: "Отправь proof",
     stepThreeText:
-      "PayPal redirect делает сразу. Другие методы создают backup request.",
+      "Добавь transaction ID, payment note, crypto hash или account reference.",
     stepFourTitle: "Баланс обновляется",
     stepFourText:
-      "Wallet обновляется в EUR, а выбранная валюта управляет только отображением.",
+      "Admin проверяет request и зачисляет balance после confirmation.",
 
-    myPayments: "Мои платежи",
-    noPaymentsYet: "Платежей ещё нет",
+    myPayments: "Мои deposits",
+    noPaymentsYet: "Deposits ещё нет",
     noPaymentsText:
-      "PayPal, Crypto, Revolut и bank платежи будут появляться здесь.",
+      "Payeer, Crypto, Revolut и Skrill deposit requests будут появляться здесь.",
     provider: "Provider",
     reference: "Reference",
     amount: "Amount",
@@ -655,11 +610,11 @@ function getStatusClass(status) {
 }
 
 function PaymentLogo({ method }) {
-  if (method.value === "paypal") {
+  if (method.value === "payeer") {
     return (
       <div className="walletRealLogo walletPaypalLogo" aria-hidden="true">
         <span className="walletPaypalP">P</span>
-        <span className="walletPaypalText">PayPal</span>
+        <span className="walletPaypalText">Payeer</span>
       </div>
     );
   }
@@ -684,8 +639,8 @@ function PaymentLogo({ method }) {
 
   return (
     <div className="walletRealLogo walletBankLogo" aria-hidden="true">
-      <span className="walletBankMark">▰</span>
-      <span className="walletBankText">Bank</span>
+      <span className="walletBankMark">S</span>
+      <span className="walletBankText">Skrill</span>
     </div>
   );
 }
@@ -700,13 +655,13 @@ function Wallet() {
   const paymentMethods = useMemo(
     () => [
       {
-        value: "paypal",
-        label: t.paypal,
-        short: "PP",
-        mode: t.automatic,
-        modeKey: "automatic",
-        tag: t.instant,
-        description: t.paypalDescription,
+        value: "payeer",
+        label: t.payeer,
+        short: "PY",
+        mode: t.manual,
+        modeKey: "manual",
+        tag: t.fast,
+        description: t.payeerDescription,
         brandClass: "walletBrandPaypal",
       },
       {
@@ -730,13 +685,13 @@ function Wallet() {
         brandClass: "walletBrandRevolut",
       },
       {
-        value: "bank",
-        label: t.bank,
-        short: "BK",
+        value: "skrill",
+        label: t.skrill,
+        short: "SK",
         mode: t.manual,
         modeKey: "manual",
         tag: t.classic,
-        description: t.bankDescription,
+        description: t.skrillDescription,
         brandClass: "walletBrandBank",
       },
     ],
@@ -747,9 +702,10 @@ function Wallet() {
     () => [
       t.floatingWallet,
       t.floatingBalance,
-      "PayPal",
+      "Payeer",
       "Crypto",
       "Revolut",
+      "Skrill",
       t.floatingCheckout,
       t.floatingTopUp,
       t.floatingFunds,
@@ -768,10 +724,9 @@ function Wallet() {
   );
 
   const [user, setUser] = useState(null);
-  const [payments, setPayments] = useState([]);
   const [manualDeposits, setManualDeposits] = useState([]);
 
-  const [selectedMethod, setSelectedMethod] = useState("paypal");
+  const [selectedMethod, setSelectedMethod] = useState("payeer");
   const [amount, setAmount] = useState("");
   const [promoCode, setPromoCode] = useState("");
   const [userNote, setUserNote] = useState("");
@@ -781,7 +736,6 @@ function Wallet() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
-  const [isCapturing, setIsCapturing] = useState(false);
 
   const activeMethod =
     paymentMethods.find((method) => method.value === selectedMethod) || paymentMethods[0];
@@ -823,15 +777,6 @@ function Wallet() {
     }
   };
 
-  const loadPayments = async () => {
-    try {
-      const res = await api.get("/payments/paypal/my");
-      setPayments(res.data.payments || []);
-    } catch (err) {
-      console.log(err.response?.data || err.message);
-    }
-  };
-
   const loadManualDeposits = async () => {
     try {
       const res = await api.get("/deposits/my");
@@ -843,7 +788,7 @@ function Wallet() {
 
   const loadWalletData = async () => {
     setIsLoading(true);
-    await Promise.allSettled([loadUser(), loadPayments(), loadManualDeposits()]);
+    await Promise.allSettled([loadUser(), loadManualDeposits()]);
     setIsLoading(false);
   };
 
@@ -851,35 +796,9 @@ function Wallet() {
     loadWalletData();
   }, []);
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const paypalStatus = params.get("paypal");
-    const paypalOrderId = params.get("token");
-
-    if (paypalStatus === "cancelled") {
-      setMessageType("error");
-      setMessage(t.paypalCancelled);
-      window.history.replaceState({}, "", "/wallet");
-      return;
-    }
-
-    if (paypalStatus === "success" && paypalOrderId) {
-      capturePaypalPayment(paypalOrderId);
-    }
-  }, [t.paypalCancelled]);
-
   const walletStats = useMemo(() => {
-    const completedPaypalPayments = payments.filter(
-      (payment) => String(payment.status || "").toLowerCase() === "completed"
-    );
-
     const completedManualDeposits = manualDeposits.filter((deposit) =>
       ["approved", "completed", "paid"].includes(String(deposit.status || "").toLowerCase())
-    );
-
-    const totalPaypalDeposited = completedPaypalPayments.reduce(
-      (sum, payment) => sum + Number(payment.amount || 0),
-      0
     );
 
     const totalManualDeposited = completedManualDeposits.reduce(
@@ -887,58 +806,34 @@ function Wallet() {
       0
     );
 
-    const pendingPaypalPayments = payments.filter(
-      (payment) => String(payment.status || "").toLowerCase() === "created"
-    ).length;
-
     const pendingManualDeposits = manualDeposits.filter((deposit) =>
       ["pending", "waiting", "review"].includes(String(deposit.status || "").toLowerCase())
     ).length;
 
     return {
-      totalDeposited: totalPaypalDeposited + totalManualDeposited,
-      pendingPayments: pendingPaypalPayments + pendingManualDeposits,
-      requests: payments.length + manualDeposits.length,
+      totalDeposited: totalManualDeposited,
+      pendingPayments: pendingManualDeposits,
+      requests: manualDeposits.length,
     };
-  }, [payments, manualDeposits]);
+  }, [manualDeposits]);
 
   const previewAmount = Number(amount || 0);
 
   const historyItems = useMemo(() => {
-    const paypalItems = payments.map((payment) => ({
-      id: payment._id,
-      provider: "PayPal",
-      reference: payment.paypalOrderId,
-      amount: payment.amount,
-      originalCurrency: payment.currency || "EUR",
-      status: payment.status || "created",
-      info: payment.paypalCaptureId || "-",
-      createdAt: payment.createdAt,
-    }));
-
-    const manualItems = manualDeposits.map((deposit) => ({
-      id: deposit._id,
-      provider: deposit.method || "Manual",
-      reference: deposit.paymentReference || "-",
-      amount: deposit.finalAmount || deposit.amount,
-      originalCurrency: "EUR",
-      status: deposit.status || "pending",
-      info: deposit.userNote || "-",
-      createdAt: deposit.createdAt,
-    }));
-
-    return [...paypalItems, ...manualItems]
+    return manualDeposits
+      .map((deposit) => ({
+        id: deposit._id,
+        provider: deposit.method || "Manual",
+        reference: deposit.paymentReference || "-",
+        amount: deposit.finalAmount || deposit.amount,
+        originalCurrency: "EUR",
+        status: deposit.status || "pending",
+        info: deposit.userNote || "-",
+        createdAt: deposit.createdAt,
+      }))
       .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
       .slice(0, 8);
-  }, [payments, manualDeposits]);
-
-  const createPaypalPayment = async () => {
-    const res = await api.post("/payments/paypal/create", {
-      amount: Number(amount),
-    });
-
-    window.location.href = res.data.approveUrl;
-  };
+  }, [manualDeposits]);
 
   const createManualDeposit = async () => {
     await api.post("/deposits", {
@@ -971,11 +866,6 @@ function Wallet() {
     setIsCreating(true);
 
     try {
-      if (selectedMethod === "paypal") {
-        await createPaypalPayment();
-        return;
-      }
-
       await createManualDeposit();
     } catch (err) {
       setMessageType("error");
@@ -985,56 +875,18 @@ function Wallet() {
     }
   };
 
-  const capturePaypalPayment = async (paypalOrderId) => {
-    setIsCapturing(true);
-    setMessageType("info");
-    setMessage(t.paypalConfirming);
-
-    try {
-      const res = await api.post("/payments/paypal/capture", {
-        paypalOrderId,
-      });
-
-      setUser(res.data.user);
-
-      if (res.data.user) {
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-
-        window.dispatchEvent(
-          new CustomEvent("empire-user-updated", {
-            detail: {
-              user: res.data.user,
-            },
-          })
-        );
-      }
-
-      setMessageType("success");
-      setMessage(`${t.paypalCompleted} ${formatMoney(res.data.newBalance)}`);
-
-      await loadPayments();
-      window.history.replaceState({}, "", "/wallet");
-    } catch (err) {
-      setMessageType("error");
-      setMessage(err.response?.data?.message || t.paypalConfirmationFailed);
-      window.history.replaceState({}, "", "/wallet");
-    } finally {
-      setIsCapturing(false);
-    }
-  };
-
   const getMethodTitle = () => {
-    if (selectedMethod === "paypal") return t.payWithPaypal;
+    if (selectedMethod === "payeer") return t.payWithPayeer;
     if (selectedMethod === "crypto") return t.payWithCrypto;
     if (selectedMethod === "revolut") return t.payWithRevolut;
-    return t.bankTransfer;
+    return t.payWithSkrill;
   };
 
   const getMethodDescription = () => {
-    if (selectedMethod === "paypal") return t.paypalLong;
+    if (selectedMethod === "payeer") return t.payeerLong;
     if (selectedMethod === "crypto") return t.cryptoLong;
     if (selectedMethod === "revolut") return t.revolutLong;
-    return t.bankLong;
+    return t.skrillLong;
   };
 
   return (
@@ -1182,7 +1034,7 @@ function Wallet() {
                 placeholder={t.exampleAmount}
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                disabled={isCreating || isCapturing}
+                disabled={isCreating}
               />
             </label>
 
@@ -1191,31 +1043,27 @@ function Wallet() {
               <input type="text" value="EUR" disabled />
             </label>
 
-            {selectedMethod !== "paypal" && (
-              <>
-                <label>
-                  <span>{t.promoOptional}</span>
-                  <input
-                    type="text"
-                    placeholder={t.promoPlaceholder}
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                    disabled={isCreating || isCapturing}
-                  />
-                </label>
+            <label>
+              <span>{t.promoOptional}</span>
+              <input
+                type="text"
+                placeholder={t.promoPlaceholder}
+                value={promoCode}
+                onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                disabled={isCreating}
+              />
+            </label>
 
-                <label>
-                  <span>{t.noteOptional}</span>
-                  <input
-                    type="text"
-                    placeholder={t.notePlaceholder}
-                    value={userNote}
-                    onChange={(e) => setUserNote(e.target.value)}
-                    disabled={isCreating || isCapturing}
-                  />
-                </label>
-              </>
-            )}
+            <label>
+              <span>{t.noteOptional}</span>
+              <input
+                type="text"
+                placeholder={t.notePlaceholder}
+                value={userNote}
+                onChange={(e) => setUserNote(e.target.value)}
+                disabled={isCreating}
+              />
+            </label>
           </div>
 
           <div className="walletMethodPreview">
@@ -1224,9 +1072,7 @@ function Wallet() {
             </div>
 
             <div>
-              <span>
-                {activeMethod.modeKey === "automatic" ? t.automaticCheckout : t.backupMethod}
-              </span>
+              <span>{t.backupMethod}</span>
               <strong>{activeMethod.description}</strong>
               <p>{getMethodDescription()}</p>
             </div>
@@ -1236,25 +1082,17 @@ function Wallet() {
             <div>
               <span>{t.paymentPreview}</span>
               <small>
-                {selectedMethod === "paypal"
-                  ? `${t.paypalPreview} ${selectedCurrency}.`
-                  : `${t.manualPreview} ${selectedCurrency}.`}
+                {t.manualPreview} {selectedCurrency}.
               </small>
             </div>
 
             <strong>{formatMoney(previewAmount)}</strong>
           </div>
 
-          <button className="walletCreateBtn" type="submit" disabled={isCreating || isCapturing}>
+          <button className="walletCreateBtn" type="submit" disabled={isCreating}>
             {isCreating
-              ? selectedMethod === "paypal"
-                ? t.redirectingPaypal
-                : t.creatingRequest
-              : isCapturing
-                ? t.confirmingPayment
-                : selectedMethod === "paypal"
-                  ? t.payWithPaypal
-                  : `${t.createRequest} ${activeMethod.label} ${t.request}`}
+              ? t.creatingRequest
+              : `${t.createRequest} ${activeMethod.label} ${t.request}`}
           </button>
 
           <p
@@ -1359,7 +1197,7 @@ function Wallet() {
                     </td>
                     <td>
                       <span className={`walletStatusPill ${getStatusClass(item.status)}`}>
-                        {item.status || "created"}
+                        {item.status || "pending"}
                       </span>
                     </td>
                     <td>{item.info || "-"}</td>

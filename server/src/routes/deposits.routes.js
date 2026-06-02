@@ -8,7 +8,15 @@ import { protect, adminOnly } from "../middleware/auth.js";
 
 const router = express.Router();
 
-const allowedManualMethods = ["revolut", "crypto", "bank", "manual"];
+const allowedManualMethods = [
+  "payeer",
+  "crypto",
+  "revolut",
+  "skrill",
+  "bank",
+  "paypal",
+  "manual",
+];
 
 const createPaymentReference = () => {
   const random = Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -18,6 +26,42 @@ const createPaymentReference = () => {
 const formatAmount = (value) => {
   return Number(Number(value || 0).toFixed(4));
 };
+
+const normalizeMethod = (method) => {
+  return method ? String(method).toLowerCase().trim() : "manual";
+};
+
+const normalizeText = (value) => {
+  return value ? String(value).trim() : "";
+};
+
+// COINREMITTER WEBHOOK HEALTH CHECK / VALIDATION
+router.get("/coinremitter/webhook", async (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "CoinRemitter webhook active",
+    provider: "coinremitter",
+  });
+});
+
+// COINREMITTER WEBHOOK RECEIVER
+router.post("/coinremitter/webhook", async (req, res) => {
+  try {
+    console.log("CoinRemitter webhook received:", req.body);
+
+    return res.status(200).json({
+      success: true,
+      message: "CoinRemitter webhook received",
+    });
+  } catch (error) {
+    console.error("CoinRemitter webhook error:", error.message);
+
+    return res.status(200).json({
+      success: false,
+      message: "CoinRemitter webhook error",
+    });
+  }
+});
 
 // USER CREATES MANUAL DEPOSIT REQUEST
 router.post("/", protect, async (req, res) => {
@@ -33,7 +77,7 @@ router.post("/", protect, async (req, res) => {
       });
     }
 
-    const cleanMethod = method ? String(method).toLowerCase().trim() : "manual";
+    const cleanMethod = normalizeMethod(method);
 
     if (!allowedManualMethods.includes(cleanMethod)) {
       return res.status(400).json({
@@ -42,7 +86,10 @@ router.post("/", protect, async (req, res) => {
       });
     }
 
-    const cleanPromoCode = promoCode ? promoCode.trim().toUpperCase() : "";
+    const cleanPromoCode = promoCode
+      ? String(promoCode).trim().toUpperCase()
+      : "";
+    const cleanUserNote = normalizeText(userNote);
 
     let paymentReference = createPaymentReference();
     let existingReference = await Deposit.findOne({ paymentReference });
@@ -60,7 +107,7 @@ router.post("/", protect, async (req, res) => {
       finalAmount: formatAmount(numericAmount),
       method: cleanMethod,
       paymentReference,
-      userNote: userNote || "",
+      userNote: cleanUserNote,
       status: "pending",
       adminNote: "",
     });
@@ -108,11 +155,15 @@ router.get("/admin/all", protect, adminOnly, async (req, res) => {
     const filter = {};
 
     if (status && status !== "all") {
-      filter.status = status;
+      filter.status = String(status).toLowerCase().trim();
     }
 
     if (method && method !== "all") {
-      filter.method = method;
+      const cleanMethod = normalizeMethod(method);
+
+      if (allowedManualMethods.includes(cleanMethod)) {
+        filter.method = cleanMethod;
+      }
     }
 
     if (search && search.trim() !== "") {
@@ -198,7 +249,9 @@ router.put("/admin/:id/approve", protect, adminOnly, async (req, res) => {
         });
       }
 
-      bonusAmount = formatAmount((Number(deposit.amount) * promo.bonusPercent) / 100);
+      bonusAmount = formatAmount(
+        (Number(deposit.amount) * promo.bonusPercent) / 100
+      );
       finalAmount = formatAmount(Number(deposit.amount) + bonusAmount);
 
       promo.usedCount += 1;
@@ -213,7 +266,7 @@ router.put("/admin/:id/approve", protect, adminOnly, async (req, res) => {
     deposit.status = "approved";
     deposit.bonusAmount = bonusAmount;
     deposit.finalAmount = finalAmount;
-    deposit.adminNote = adminNote || deposit.adminNote || "";
+    deposit.adminNote = normalizeText(adminNote) || deposit.adminNote || "";
     await deposit.save();
 
     await Transaction.create({
@@ -224,8 +277,8 @@ router.put("/admin/:id/approve", protect, adminOnly, async (req, res) => {
       provider: deposit.method,
       reference: deposit.paymentReference,
       description: appliedPromoCode
-        ? `Deposit approved. Amount €${deposit.amount}, bonus €${bonusAmount}, code ${appliedPromoCode}`
-        : `Deposit approved. Amount €${deposit.amount}`,
+        ? `Deposit approved. Method ${deposit.method}. Amount €${deposit.amount}, bonus €${bonusAmount}, code ${appliedPromoCode}`
+        : `Deposit approved. Method ${deposit.method}. Amount €${deposit.amount}`,
     });
 
     const populatedDeposit = await Deposit.findById(deposit._id).populate(
@@ -274,7 +327,7 @@ router.put("/admin/:id/reject", protect, adminOnly, async (req, res) => {
     }
 
     deposit.status = "rejected";
-    deposit.adminNote = adminNote || "";
+    deposit.adminNote = normalizeText(adminNote);
     deposit.finalAmount = formatAmount(deposit.finalAmount || deposit.amount);
     await deposit.save();
 
