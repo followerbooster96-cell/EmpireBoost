@@ -1724,3 +1724,80 @@
     display: none;
   }
 }
+/* =========================
+   WALLET SCROLL + MOBILE FLOW FIX
+   paste at VERY BOTTOM of Wallet.css
+========================= */
+
+html,
+body,
+#root {
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-y: auto;
+}
+
+.walletPagePro {
+  overflow: visible !important;
+  overflow-x: clip !important;
+  min-height: auto !important;
+  padding-bottom: max(92px, env(safe-area-inset-bottom, 0px) + 84px) !important;
+}
+
+.walletFloatingLayer,
+.walletAurora,
+.walletPagePro::before,
+.walletPagePro::after {
+  pointer-events: none !important;
+}
+
+.walletDepositsTableWrap {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 720px) {
+  .walletPagePro {
+    overflow: visible !important;
+    overflow-x: clip !important;
+    padding-top: 78px !important;
+    padding-bottom: max(84px, env(safe-area-inset-bottom, 0px) + 76px) !important;
+  }
+
+  .walletHeroPro,
+  .walletStatsGrid,
+  .walletMainGrid,
+  .walletDepositsPanel {
+    width: 100%;
+  }
+
+  .walletHeroContent,
+  .walletBalanceCard,
+  .walletPanel,
+  .walletStatCard {
+    transform: none !important;
+  }
+
+  .walletHeroContent:hover,
+  .walletBalanceCard:hover,
+  .walletStatCard:hover,
+  .walletPanel:hover {
+    transform: none !important;
+  }
+
+  .walletDepositsTable {
+    min-width: 760px;
+  }
+}
+
+@media (max-width: 480px) {
+  .walletPagePro {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    padding-bottom: max(78px, env(safe-area-inset-bottom, 0px) + 70px) !important;
+  }
+}
