@@ -1754,3 +1754,145 @@
     display: none;
   }
 }
+/* =========================
+   WALLET HARD SCROLL FIX
+   paste at VERY BOTTOM of Wallet.css
+========================= */
+
+.walletPagePro {
+  overflow: visible !important;
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+  height: auto !important;
+  min-height: calc(100vh - 78px) !important;
+  touch-action: auto !important;
+  overscroll-behavior: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Background effects must never block scroll/touch */
+.walletAurora,
+.walletFloatingLayer,
+.walletPagePro::before,
+.walletPagePro::after,
+.walletBalanceGlow,
+.walletPanel::before,
+.walletHeroContent::before,
+.walletBalanceCard::before,
+.walletStatCard::before {
+  pointer-events: none !important;
+}
+
+/* Real content must stay above background and normal scroll flow */
+.walletHeroPro,
+.walletStatsGrid,
+.walletMainGrid,
+.walletDepositsPanel {
+  position: relative !important;
+  z-index: 5 !important;
+  overflow: visible !important;
+}
+
+/* Panels can hide their internal shine, but should not lock page scroll */
+.walletHeroContent,
+.walletBalanceCard,
+.walletStatCard,
+.walletPanel {
+  overflow: hidden !important;
+}
+
+/* Table only scrolls sideways when finger is on the table */
+.walletDepositsTableWrap {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  max-width: 100% !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-x !important;
+}
+
+/* But normal wallet page should always scroll vertically */
+.walletPagePro,
+.walletHeroPro,
+.walletStatsGrid,
+.walletMainGrid,
+.walletDepositsPanel,
+.walletDepositPanel,
+.walletGuidePanel {
+  touch-action: pan-y !important;
+}
+
+/* Desktop keeps premium hover */
+@media (min-width: 721px) {
+  .walletHeroContent:hover,
+  .walletBalanceCard:hover,
+  .walletStatCard:hover,
+  .walletPanel:hover {
+    transform: translateY(-4px);
+  }
+}
+
+/* Mobile: remove hover/transform glitches completely */
+@media (max-width: 720px) {
+  .walletPagePro {
+    overflow: visible !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    height: auto !important;
+    min-height: auto !important;
+    padding-top: 78px !important;
+    padding-bottom: 110px !important;
+    touch-action: pan-y !important;
+    overscroll-behavior-y: auto !important;
+  }
+
+  .walletHeroContent,
+  .walletBalanceCard,
+  .walletStatCard,
+  .walletPanel,
+  .walletMethodOption,
+  .walletSteps div,
+  .walletPrimaryBtn,
+  .walletSecondaryBtn,
+  .walletCreateBtn {
+    transform: none !important;
+    will-change: auto !important;
+  }
+
+  .walletHeroContent:hover,
+  .walletBalanceCard:hover,
+  .walletStatCard:hover,
+  .walletPanel:hover,
+  .walletMethodOption:hover,
+  .walletSteps div:hover,
+  .walletPrimaryBtn:hover,
+  .walletSecondaryBtn:hover,
+  .walletCreateBtn:hover {
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .walletFloatingLayer {
+    display: none !important;
+  }
+
+  .walletAurora {
+    opacity: 0.45 !important;
+  }
+
+  .walletDepositsTableWrap {
+    touch-action: pan-x !important;
+  }
+
+  .walletDepositsTable {
+    min-width: 760px !important;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 480px) {
+  .walletPagePro {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    padding-bottom: 120px !important;
+  }
+}
