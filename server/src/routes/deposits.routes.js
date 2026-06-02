@@ -155,7 +155,9 @@ const applyPromoIfNeeded = async (deposit) => {
       throw error;
     }
 
-    bonusAmount = formatAmount((Number(deposit.amount) * promo.bonusPercent) / 100);
+    bonusAmount = formatAmount(
+      (Number(deposit.amount) * promo.bonusPercent) / 100
+    );
     finalAmount = formatAmount(Number(deposit.amount) + bonusAmount);
 
     promo.usedCount += 1;
@@ -194,9 +196,8 @@ const approveDepositAndCreditUser = async (deposit, adminNote = "") => {
     throw error;
   }
 
-  const { bonusAmount, finalAmount, appliedPromoCode } = await applyPromoIfNeeded(
-    deposit
-  );
+  const { bonusAmount, finalAmount, appliedPromoCode } =
+    await applyPromoIfNeeded(deposit);
 
   user.balance = formatAmount(Number(user.balance || 0) + finalAmount);
   await user.save();
@@ -367,7 +368,8 @@ router.post("/coinremitter/webhook", async (req, res) => {
     }
 
     if (parsed.cryptoAmount) {
-      deposit.cryptoAmount = Number(parsed.cryptoAmount) || deposit.cryptoAmount || 0;
+      deposit.cryptoAmount =
+        Number(parsed.cryptoAmount) || deposit.cryptoAmount || 0;
     }
 
     if (parsed.address) {
@@ -379,7 +381,9 @@ router.post("/coinremitter/webhook", async (req, res) => {
     if (isCoinRemitterPaid(parsed.status, parsed.statusCode)) {
       await approveDepositAndCreditUser(
         deposit,
-        `Auto approved by CoinRemitter webhook. Status: ${parsed.status || parsed.statusCode}`
+        `Auto approved by CoinRemitter webhook. Status: ${
+          parsed.status || parsed.statusCode
+        }`
       );
     }
 
@@ -432,7 +436,7 @@ router.post("/coinremitter/create-invoice", protect, async (req, res) => {
 
     const invoiceParams = {
       amount: String(formatAmount(numericAmount)),
-      name: `EmpireBoost ${coinLabels[cleanCoin]} Wallet Top-up`,
+      name: `EmpireBoost ${cleanCoin}`,
       email: req.user.email || "",
       fiat_currency: "EUR",
       expiry_time_in_minutes: "60",
@@ -445,7 +449,7 @@ router.post("/coinremitter/create-invoice", protect, async (req, res) => {
       fail_url:
         process.env.COINREMITTER_CANCEL_URL ||
         `${clientUrl}/wallet?deposit=cancel`,
-      description: `EmpireBoost wallet top-up ${paymentReference}`,
+      description: `Wallet top-up ${paymentReference}`,
       custom_data1: paymentReference,
       custom_data2: String(req.user._id),
     };
