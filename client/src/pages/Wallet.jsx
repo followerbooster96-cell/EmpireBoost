@@ -4,50 +4,85 @@ import useCurrency from "../lib/useCurrency.js";
 import { getStoredLanguage } from "../lib/language.js";
 import "./Wallet.css";
 
+const CRYPTO_WALLETS = [
+  {
+    value: "LTC",
+    label: "Litecoin",
+    symbol: "Ł",
+    network: "LTC Network",
+    address: "LRLFcSR86JZkKxLKtCz2TR35cDny56e6py",
+    tag: "Fast",
+    tone: "walletCoinLtc",
+    note: "Send only Litecoin through the LTC network.",
+  },
+  {
+    value: "DOGE",
+    label: "Dogecoin",
+    symbol: "Ð",
+    network: "DOGE Network",
+    address: "DRvjYJcr4yNMkQkY2zRzw6yV7CpFAaTgik",
+    tag: "Low fee",
+    tone: "walletCoinDoge",
+    note: "Send only Dogecoin through the DOGE network.",
+  },
+  {
+    value: "BTC",
+    label: "Bitcoin",
+    symbol: "₿",
+    network: "BTC Network",
+    address: "1EbimWWDP5JkpDgqomMftrTDmy1UWysDDo",
+    tag: "Classic",
+    tone: "walletCoinBtc",
+    note: "Send only Bitcoin through the BTC network.",
+  },
+  {
+    value: "DASH",
+    label: "Dash",
+    symbol: "D",
+    network: "DASH Network",
+    address: "XiCWoagxUfZJothfvR2gK68JjEw3cjHGBP",
+    tag: "Instant",
+    tone: "walletCoinDash",
+    note: "Send only Dash through the DASH network.",
+  },
+  {
+    value: "USDT_SOL",
+    label: "USDT",
+    symbol: "$",
+    network: "SOL Network",
+    address: "4JjC3b1cBywBWrs7oM8UzAMhZM79t2XaPZnF1PjKjgjD",
+    tag: "Stable",
+    tone: "walletCoinUsdt",
+    note: "Send only USDT through the Solana / SOL network.",
+  },
+  {
+    value: "ETH_BSC",
+    label: "ETH",
+    symbol: "Ξ",
+    network: "BSC Network",
+    address: "0x5bb9220525b857097afb80e9180dcdf37b2b335d",
+    tag: "BSC",
+    tone: "walletCoinEth",
+    note: "Send only ETH through the BSC network.",
+  },
+  {
+    value: "SOL",
+    label: "Solana",
+    symbol: "◎",
+    network: "SOL Network",
+    address: "4JjC3b1cBywBWrs7oM8UzAMhZM79t2XaPZnF1PjKjgjD",
+    tag: "Fast",
+    tone: "walletCoinSol",
+    note: "Send only SOL through the Solana / SOL network.",
+  },
+];
+
 const WALLET_TRANSLATIONS = {
   en: {
-    crypto: "Crypto",
-    manual: "Manual",
-    instant: "Instant",
-    backup: "Backup",
-    fast: "Fast",
-    classic: "Classic",
-    comingSoon: "Coming soon",
-    ltc: "Litecoin",
-    doge: "Dogecoin",
-    btc: "Bitcoin",
-    dash: "Dash",
-
-    cryptoDescription: "Crypto wallet top-up with CoinRemitter checkout.",
-    ltcDescription: "Litecoin checkout is active now.",
-    dogeDescription: "Dogecoin checkout will be added next.",
-    btcDescription: "Bitcoin checkout will be added later.",
-    dashDescription: "Dash checkout will be added later.",
-
-    floatingWallet: "Wallet",
-    floatingBalance: "Balance",
-    floatingCheckout: "Checkout",
-    floatingTopUp: "Top Up",
-    floatingFunds: "Funds",
-    floatingSecure: "Secure",
-    floatingCompleted: "Completed",
-    floatingPending: "Pending",
-    floatingOrders: "Orders",
-    floatingGrowth: "Growth",
-    floatingCreator: "Creator",
-    floatingRevenue: "Revenue",
-    floatingPayments: "Payments",
-    floatingTracking: "Tracking",
-
-    requestCreated: "invoice created successfully.",
-    enterMinimum: "Please enter at least 1.00 EUR.",
-    couldNotCreatePayment: "Could not create crypto payment.",
-    coinNotReady: "This coin is not connected yet. Use Litecoin for now.",
-
-    heroBadge: "Premium crypto wallet top-up",
-    heroTitle: "Fund your wallet with crypto checkout.",
+    heroBadge: "Manual crypto wallet top-up",
+    heroTitle: "Fund your wallet directly with crypto.",
     heroText:
-      "Choose a crypto coin and create a secure CoinRemitter invoice. Litecoin is live first, more coins will be connected next.",
+      "Choose a coin, copy the correct wallet address, send the payment on the exact network and submit your transaction hash for approval.",
     addFunds: "Add Funds",
     paymentHistory: "Payment History",
 
@@ -62,44 +97,56 @@ const WALLET_TRANSLATIONS = {
     totalDeposited: "Total deposited",
     completedPaymentsOnly: "Approved deposits only",
     pendingPayments: "Pending deposits",
-    waitingNotCaptured: "Waiting for confirmation",
+    waitingNotCaptured: "Waiting for admin approval",
     totalPayments: "Total deposits",
     allAttempts: "All deposit requests",
 
     addFundsPanel: "Add funds",
-    payWithCrypto: "Top up with Crypto",
-
-    cryptoLong:
-      "Create a crypto invoice. You will be redirected to CoinRemitter checkout and your wallet balance is credited after confirmation.",
-
+    payWithCrypto: "Manual crypto payment",
+    chooseCoin: "Choose coin",
+    live: "Live",
+    directPayment: "Direct wallet payment",
     topupAmount: "Top-up amount",
     exampleAmount: "Example: 25.00",
     paymentCurrency: "Payment currency",
     cryptoCoin: "Crypto coin",
     promoOptional: "Promo code optional",
     promoPlaceholder: "Example: BOOST10",
-    noteOptional: "Payment note",
+    txidRequired: "Transaction hash / TXID required",
+    txidPlaceholder: "Paste blockchain transaction hash here...",
+    noteOptional: "Optional note",
     notePlaceholder: "Optional note for admin...",
-    backupMethod: "CoinRemitter checkout",
+    paymentAddress: "Payment address",
+    addressCopied: "Address copied.",
+    copyAddress: "Copy address",
+    selectedNetwork: "Selected network",
+    importantWarning: "Important",
+    warningText:
+      "Send only the selected coin on the selected network. Wrong coin or wrong network can permanently lose the payment.",
     paymentPreview: "Payment preview",
-    manualPreview: "Invoice is created in EUR. Display preview is shown in",
-    creatingRequest: "Creating invoice...",
-    createRequest: "Create",
-    request: "Invoice",
+    manualPreview:
+      "After sending crypto, submit the TXID. Your balance is credited after admin verification.",
+    creatingRequest: "Submitting request...",
+    createRequest: "Submit crypto deposit",
+    requestCreated:
+      "Crypto deposit request created. We will verify the TXID and approve your wallet balance.",
+    enterMinimum: "Please enter at least 1.00 EUR.",
+    txidMissing: "Please paste your transaction hash / TXID.",
+    couldNotCreatePayment: "Could not create crypto deposit request.",
     currencyInfo:
-      "Wallet and payment calculations stay in EUR. The selected currency is only a display conversion so pricing stays safe and clear.",
+      "Wallet accounting stays in EUR. Crypto payments are checked manually by transaction hash.",
 
     paymentGuide: "Payment guide",
     howItWorks: "How it works",
-    stepOneTitle: "Choose coin",
-    stepOneText: "Select Litecoin now. Dogecoin, Bitcoin and Dash are prepared for later.",
-    stepTwoTitle: "Enter amount",
-    stepTwoText: "Payment amount is entered in EUR to keep wallet accounting accurate.",
-    stepThreeTitle: "Open checkout",
-    stepThreeText: "CoinRemitter creates an invoice and opens the payment page.",
-    stepFourTitle: "Balance updates",
+    stepOneTitle: "Choose coin and network",
+    stepOneText: "Select the coin you want to use and check the network carefully.",
+    stepTwoTitle: "Copy address",
+    stepTwoText: "Copy the shown address and send the exact crypto payment.",
+    stepThreeTitle: "Paste TXID",
+    stepThreeText: "After payment, paste the blockchain transaction hash.",
+    stepFourTitle: "Admin approval",
     stepFourText:
-      "After blockchain confirmation, webhook can approve the deposit and credit your wallet.",
+      "We verify the payment and credit your wallet balance manually.",
 
     myPayments: "My deposits",
     noPaymentsYet: "No deposits yet",
@@ -112,51 +159,27 @@ const WALLET_TRANSLATIONS = {
     info: "Info",
     date: "Date",
     originalCurrency: "Original payment currency",
+
+    floatingWallet: "Wallet",
+    floatingBalance: "Balance",
+    floatingCrypto: "Crypto",
+    floatingBinance: "Binance",
+    floatingTopUp: "Top Up",
+    floatingFunds: "Funds",
+    floatingSecure: "Secure",
+    floatingCompleted: "Completed",
+    floatingPending: "Pending",
+    floatingOrders: "Orders",
+    floatingGrowth: "Growth",
+    floatingPayments: "Payments",
+    floatingTracking: "Tracking",
   },
 
   de: {
-    crypto: "Crypto",
-    manual: "Manuell",
-    instant: "Instant",
-    backup: "Backup",
-    fast: "Schnell",
-    classic: "Klassisch",
-    comingSoon: "Kommt bald",
-    ltc: "Litecoin",
-    doge: "Dogecoin",
-    btc: "Bitcoin",
-    dash: "Dash",
-
-    cryptoDescription: "Crypto Wallet-Aufladung mit CoinRemitter Checkout.",
-    ltcDescription: "Litecoin Checkout ist jetzt aktiv.",
-    dogeDescription: "Dogecoin Checkout wird als nächstes hinzugefügt.",
-    btcDescription: "Bitcoin Checkout wird später hinzugefügt.",
-    dashDescription: "Dash Checkout wird später hinzugefügt.",
-
-    floatingWallet: "Wallet",
-    floatingBalance: "Guthaben",
-    floatingCheckout: "Checkout",
-    floatingTopUp: "Aufladen",
-    floatingFunds: "Funds",
-    floatingSecure: "Sicher",
-    floatingCompleted: "Abgeschlossen",
-    floatingPending: "Ausstehend",
-    floatingOrders: "Bestellungen",
-    floatingGrowth: "Growth",
-    floatingCreator: "Creator",
-    floatingRevenue: "Umsatz",
-    floatingPayments: "Zahlungen",
-    floatingTracking: "Tracking",
-
-    requestCreated: "Invoice erfolgreich erstellt.",
-    enterMinimum: "Bitte gib mindestens 1.00 EUR ein.",
-    couldNotCreatePayment: "Crypto-Zahlung konnte nicht erstellt werden.",
-    coinNotReady: "Dieser Coin ist noch nicht verbunden. Nutze aktuell Litecoin.",
-
-    heroBadge: "Premium Crypto Wallet Aufladung",
-    heroTitle: "Lade dein Wallet mit Crypto Checkout auf.",
+    heroBadge: "Manuelle Crypto Wallet-Aufladung",
+    heroTitle: "Lade dein Wallet direkt mit Crypto auf.",
     heroText:
-      "Wähle einen Coin und erstelle eine sichere CoinRemitter Invoice. Litecoin ist zuerst live, weitere Coins kommen danach.",
+      "Wähle einen Coin, kopiere die richtige Wallet-Adresse, sende die Zahlung im exakten Netzwerk und sende danach deinen Transaction Hash zur Prüfung.",
     addFunds: "Guthaben aufladen",
     paymentHistory: "Zahlungsverlauf",
 
@@ -171,44 +194,56 @@ const WALLET_TRANSLATIONS = {
     totalDeposited: "Gesamt eingezahlt",
     completedPaymentsOnly: "Nur genehmigte Deposits",
     pendingPayments: "Ausstehende Deposits",
-    waitingNotCaptured: "Wartet auf Bestätigung",
+    waitingNotCaptured: "Wartet auf Admin-Freigabe",
     totalPayments: "Deposits gesamt",
     allAttempts: "Alle Deposit-Anfragen",
 
     addFundsPanel: "Guthaben aufladen",
-    payWithCrypto: "Mit Crypto aufladen",
-
-    cryptoLong:
-      "Erstelle eine Crypto Invoice. Du wirst zum CoinRemitter Checkout weitergeleitet und dein Guthaben wird nach Bestätigung gutgeschrieben.",
-
+    payWithCrypto: "Manuelle Crypto-Zahlung",
+    chooseCoin: "Coin wählen",
+    live: "Live",
+    directPayment: "Direkte Wallet-Zahlung",
     topupAmount: "Aufladebetrag",
     exampleAmount: "Beispiel: 25.00",
     paymentCurrency: "Zahlungswährung",
     cryptoCoin: "Crypto Coin",
     promoOptional: "Promo-Code optional",
     promoPlaceholder: "Beispiel: BOOST10",
-    noteOptional: "Zahlungsnotiz",
+    txidRequired: "Transaction Hash / TXID erforderlich",
+    txidPlaceholder: "Blockchain Transaction Hash hier einfügen...",
+    noteOptional: "Optionale Notiz",
     notePlaceholder: "Optionale Notiz für Admin...",
-    backupMethod: "CoinRemitter Checkout",
+    paymentAddress: "Zahlungsadresse",
+    addressCopied: "Adresse kopiert.",
+    copyAddress: "Adresse kopieren",
+    selectedNetwork: "Ausgewähltes Netzwerk",
+    importantWarning: "Wichtig",
+    warningText:
+      "Sende nur den ausgewählten Coin im ausgewählten Netzwerk. Falscher Coin oder falsches Netzwerk kann die Zahlung dauerhaft verlieren.",
     paymentPreview: "Zahlungsvorschau",
-    manualPreview: "Invoice wird in EUR erstellt. Vorschau wird angezeigt in",
-    creatingRequest: "Invoice wird erstellt...",
-    createRequest: "Erstelle",
-    request: "Invoice",
+    manualPreview:
+      "Nach der Crypto-Zahlung TXID senden. Dein Guthaben wird nach Admin-Prüfung gutgeschrieben.",
+    creatingRequest: "Anfrage wird gesendet...",
+    createRequest: "Crypto Deposit senden",
+    requestCreated:
+      "Crypto Deposit-Anfrage erstellt. Wir prüfen die TXID und geben dein Wallet-Guthaben frei.",
+    enterMinimum: "Bitte gib mindestens 1.00 EUR ein.",
+    txidMissing: "Bitte füge deinen Transaction Hash / TXID ein.",
+    couldNotCreatePayment: "Crypto Deposit-Anfrage konnte nicht erstellt werden.",
     currencyInfo:
-      "Wallet- und Zahlungsberechnungen bleiben in EUR. Die ausgewählte Währung ist nur eine Anzeigeumrechnung.",
+      "Wallet-Buchhaltung bleibt in EUR. Crypto-Zahlungen werden manuell per Transaction Hash geprüft.",
 
     paymentGuide: "Zahlungsanleitung",
     howItWorks: "So funktioniert es",
-    stepOneTitle: "Coin wählen",
-    stepOneText: "Wähle aktuell Litecoin. Dogecoin, Bitcoin und Dash sind vorbereitet.",
-    stepTwoTitle: "Betrag eingeben",
-    stepTwoText: "Der Zahlungsbetrag wird in EUR eingegeben, damit die Wallet korrekt bleibt.",
-    stepThreeTitle: "Checkout öffnen",
-    stepThreeText: "CoinRemitter erstellt eine Invoice und öffnet die Zahlungsseite.",
-    stepFourTitle: "Guthaben aktualisiert",
+    stepOneTitle: "Coin und Netzwerk wählen",
+    stepOneText: "Wähle den Coin und prüfe das Netzwerk sehr genau.",
+    stepTwoTitle: "Adresse kopieren",
+    stepTwoText: "Kopiere die angezeigte Adresse und sende die Crypto-Zahlung.",
+    stepThreeTitle: "TXID einfügen",
+    stepThreeText: "Nach der Zahlung den Blockchain Transaction Hash einfügen.",
+    stepFourTitle: "Admin-Freigabe",
     stepFourText:
-      "Nach Blockchain-Bestätigung kann der Webhook den Deposit genehmigen und Wallet gutschreiben.",
+      "Wir prüfen die Zahlung und schreiben dein Wallet-Guthaben manuell gut.",
 
     myPayments: "Meine Deposits",
     noPaymentsYet: "Noch keine Deposits",
@@ -221,6 +256,20 @@ const WALLET_TRANSLATIONS = {
     info: "Info",
     date: "Datum",
     originalCurrency: "Originale Zahlungswährung",
+
+    floatingWallet: "Wallet",
+    floatingBalance: "Guthaben",
+    floatingCrypto: "Crypto",
+    floatingBinance: "Binance",
+    floatingTopUp: "Aufladen",
+    floatingFunds: "Funds",
+    floatingSecure: "Sicher",
+    floatingCompleted: "Abgeschlossen",
+    floatingPending: "Ausstehend",
+    floatingOrders: "Bestellungen",
+    floatingGrowth: "Growth",
+    floatingPayments: "Zahlungen",
+    floatingTracking: "Tracking",
   },
 };
 
@@ -252,11 +301,21 @@ function getStatusClass(status) {
   return "walletStatusPending";
 }
 
-function PaymentLogo({ method }) {
+function shortenText(value, start = 10, end = 8) {
+  const text = String(value || "");
+
+  if (text.length <= start + end + 5) {
+    return text;
+  }
+
+  return `${text.slice(0, start)}...${text.slice(-end)}`;
+}
+
+function CryptoLogo({ coin }) {
   return (
-    <div className="walletRealLogo walletCryptoLogo" aria-hidden="true">
-      <span className="walletCryptoCoin">{method.short || "₿"}</span>
-      <span className="walletCryptoText">{method.label || "Crypto"}</span>
+    <div className={`walletCryptoLogoReal ${coin.tone}`} aria-hidden="true">
+      <span className="walletCryptoLogoSymbol">{coin.symbol}</span>
+      <span className="walletCryptoLogoText">{coin.label}</span>
     </div>
   );
 }
@@ -268,55 +327,7 @@ function Wallet() {
   const [selectedLanguage, setSelectedLanguage] = useState(getStoredLanguage());
   const t = getWalletTranslations(selectedLanguage);
 
-  const cryptoCoins = useMemo(
-    () => [
-      {
-        value: "LTC",
-        label: t.ltc,
-        short: "Ł",
-        mode: t.instant,
-        modeKey: "instant",
-        tag: "Live",
-        description: t.ltcDescription,
-        brandClass: "walletBrandCrypto",
-        enabled: true,
-      },
-      {
-        value: "DOGE",
-        label: t.doge,
-        short: "Ð",
-        mode: t.comingSoon,
-        modeKey: "manual",
-        tag: t.comingSoon,
-        description: t.dogeDescription,
-        brandClass: "walletBrandCrypto",
-        enabled: false,
-      },
-      {
-        value: "BTC",
-        label: t.btc,
-        short: "₿",
-        mode: t.comingSoon,
-        modeKey: "manual",
-        tag: t.comingSoon,
-        description: t.btcDescription,
-        brandClass: "walletBrandCrypto",
-        enabled: false,
-      },
-      {
-        value: "DASH",
-        label: t.dash,
-        short: "D",
-        mode: t.comingSoon,
-        modeKey: "manual",
-        tag: t.comingSoon,
-        description: t.dashDescription,
-        brandClass: "walletBrandCrypto",
-        enabled: false,
-      },
-    ],
-    [t]
-  );
+  const cryptoCoins = useMemo(() => CRYPTO_WALLETS, []);
 
   const floatingWalletItems = useMemo(
     () => [
@@ -326,8 +337,11 @@ function Wallet() {
       "Dogecoin",
       "Bitcoin",
       "Dash",
-      "CoinRemitter",
-      t.floatingCheckout,
+      "USDT SOL",
+      "ETH BSC",
+      "Solana",
+      t.floatingCrypto,
+      t.floatingBinance,
       t.floatingTopUp,
       t.floatingFunds,
       t.floatingSecure,
@@ -335,9 +349,6 @@ function Wallet() {
       t.floatingPending,
       t.floatingOrders,
       t.floatingGrowth,
-      t.floatingCreator,
-      t.fast,
-      t.floatingRevenue,
       t.floatingPayments,
       t.floatingTracking,
     ],
@@ -347,9 +358,10 @@ function Wallet() {
   const [user, setUser] = useState(null);
   const [manualDeposits, setManualDeposits] = useState([]);
 
-  const [selectedCoin, setSelectedCoin] = useState("LTC");
+  const [selectedCoinValue, setSelectedCoinValue] = useState("LTC");
   const [amount, setAmount] = useState("");
   const [promoCode, setPromoCode] = useState("");
+  const [txid, setTxid] = useState("");
   const [userNote, setUserNote] = useState("");
 
   const [message, setMessage] = useState("");
@@ -358,8 +370,8 @@ function Wallet() {
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
 
-  const activeMethod =
-    cryptoCoins.find((method) => method.value === selectedCoin) || cryptoCoins[0];
+  const activeCoin =
+    cryptoCoins.find((coin) => coin.value === selectedCoinValue) || cryptoCoins[0];
 
   useEffect(() => {
     const syncLanguage = () => {
@@ -419,7 +431,9 @@ function Wallet() {
 
   const walletStats = useMemo(() => {
     const completedManualDeposits = manualDeposits.filter((deposit) =>
-      ["approved", "completed", "paid"].includes(String(deposit.status || "").toLowerCase())
+      ["approved", "completed", "paid"].includes(
+        String(deposit.status || "").toLowerCase()
+      )
     );
 
     const totalManualDeposited = completedManualDeposits.reduce(
@@ -428,7 +442,9 @@ function Wallet() {
     );
 
     const pendingManualDeposits = manualDeposits.filter((deposit) =>
-      ["pending", "waiting", "review"].includes(String(deposit.status || "").toLowerCase())
+      ["pending", "waiting", "review"].includes(
+        String(deposit.status || "").toLowerCase()
+      )
     ).length;
 
     return {
@@ -444,54 +460,66 @@ function Wallet() {
     return manualDeposits
       .map((deposit) => ({
         id: deposit._id,
-        provider: deposit.cryptoCoin
-          ? `${deposit.method || "crypto"} · ${deposit.cryptoCoin}`
-          : deposit.method || "Manual",
-        reference: deposit.providerInvoiceId || deposit.paymentReference || "-",
+        provider: deposit.method || "crypto",
+        reference: deposit.paymentReference || "-",
         amount: deposit.finalAmount || deposit.amount,
         originalCurrency: "EUR",
         status: deposit.status || "pending",
-        info:
-          deposit.providerInvoiceUrl ||
-          deposit.userNote ||
-          deposit.providerStatus ||
-          "-",
+        info: deposit.userNote || deposit.adminNote || "-",
         createdAt: deposit.createdAt,
       }))
       .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
       .slice(0, 8);
   }, [manualDeposits]);
 
-  const createCryptoInvoice = async () => {
-    const selected = cryptoCoins.find((coin) => coin.value === selectedCoin);
+  const handleCopyAddress = async () => {
+    try {
+      await navigator.clipboard.writeText(activeCoin.address);
 
-    if (!selected?.enabled) {
+      setMessageType("success");
+      setMessage(t.addressCopied);
+    } catch {
       setMessageType("error");
-      setMessage(t.coinNotReady);
+      setMessage(activeCoin.address);
+    }
+  };
+
+  const createManualCryptoDeposit = async () => {
+    const cleanTxid = txid.trim();
+
+    if (!cleanTxid) {
+      setMessageType("error");
+      setMessage(t.txidMissing);
       return;
     }
 
-    const res = await api.post("/deposits/coinremitter/create-invoice", {
+    const cryptoNote = [
+      "MANUAL CRYPTO DEPOSIT",
+      `Coin: ${activeCoin.label} (${activeCoin.value})`,
+      `Network: ${activeCoin.network}`,
+      `Payment address: ${activeCoin.address}`,
+      `TXID: ${cleanTxid}`,
+      userNote.trim() ? `User note: ${userNote.trim()}` : "",
+    ]
+      .filter(Boolean)
+      .join(" | ");
+
+    await api.post("/deposits", {
       amount: Number(amount),
       promoCode,
-      coin: selectedCoin,
-      userNote,
+      method: "crypto",
+      userNote: cryptoNote,
     });
 
     setMessageType("success");
-    setMessage(`${selected.label} ${t.requestCreated}`);
+    setMessage(t.requestCreated);
 
     setAmount("");
     setPromoCode("");
+    setTxid("");
     setUserNote("");
 
     await Promise.allSettled([loadManualDeposits(), loadUser()]);
-
-    const invoiceUrl = res.data?.invoice?.url;
-
-    if (invoiceUrl) {
-      window.location.href = invoiceUrl;
-    }
   };
 
   const handlePayment = async (e) => {
@@ -507,7 +535,7 @@ function Wallet() {
     setIsCreating(true);
 
     try {
-      await createCryptoInvoice();
+      await createManualCryptoDeposit();
     } catch (err) {
       setMessageType("error");
       setMessage(err.response?.data?.message || t.couldNotCreatePayment);
@@ -527,7 +555,10 @@ function Wallet() {
 
       <div className="walletFloatingLayer" aria-hidden="true">
         {floatingWalletItems.map((item, index) => (
-          <span className={`walletFloat walletFloat${index + 1}`} key={`${item}-${index}`}>
+          <span
+            className={`walletFloat walletFloat${index + 1}`}
+            key={`${item}-${index}`}
+          >
             {item}
           </span>
         ))}
@@ -580,7 +611,9 @@ function Wallet() {
 
       {message && (
         <section className={`walletMessage walletMessage-${messageType}`}>
-          <span>{messageType === "success" ? "✓" : messageType === "error" ? "!" : "i"}</span>
+          <span>
+            {messageType === "success" ? "✓" : messageType === "error" ? "!" : "i"}
+          </span>
           <p>{message}</p>
         </section>
       )}
@@ -623,32 +656,61 @@ function Wallet() {
               <h2>{t.payWithCrypto}</h2>
             </div>
 
-            <div className={`walletPanelBrandMark ${activeMethod.brandClass}`}>
-              <PaymentLogo method={activeMethod} />
+            <div className="walletPanelBrandMark">
+              <CryptoLogo coin={activeCoin} />
             </div>
           </div>
 
           <div className="walletMethodGrid">
-            {cryptoCoins.map((method) => (
+            {cryptoCoins.map((coin) => (
               <button
                 type="button"
-                key={method.value}
-                onClick={() => setSelectedCoin(method.value)}
-                className={`walletMethodOption ${method.brandClass} ${
-                  selectedCoin === method.value ? "walletMethodOptionActive" : ""
-                }`}
+                key={coin.value}
+                onClick={() => setSelectedCoinValue(coin.value)}
+                className={`walletMethodOption ${
+                  selectedCoinValue === coin.value ? "walletMethodOptionActive" : ""
+                } ${coin.tone}`}
               >
                 <div className="walletMethodOptionTop">
-                  <PaymentLogo method={method} />
-                  <span className="walletMethodOptionTag">{method.tag}</span>
+                  <CryptoLogo coin={coin} />
+                  <span className="walletMethodOptionTag">{coin.tag}</span>
                 </div>
 
-                <strong>{method.label}</strong>
-                <p>{method.description}</p>
+                <strong>{coin.label}</strong>
+                <p>{coin.network}</p>
 
-                <small>{method.mode}</small>
+                <small>{t.live}</small>
               </button>
             ))}
+          </div>
+
+          <div className="walletAddressBox">
+            <div className="walletAddressHeader">
+              <div>
+                <span>{t.paymentAddress}</span>
+                <strong>{activeCoin.label}</strong>
+              </div>
+
+              <CryptoLogo coin={activeCoin} />
+            </div>
+
+            <div className="walletNetworkLine">
+              <span>{t.selectedNetwork}</span>
+              <b>{activeCoin.network}</b>
+            </div>
+
+            <div className="walletAddressLine">
+              <code>{activeCoin.address}</code>
+              <button type="button" onClick={handleCopyAddress}>
+                {t.copyAddress}
+              </button>
+            </div>
+
+            <div className="walletWarningBox">
+              <b>{t.importantWarning}</b>
+              <p>{t.warningText}</p>
+              <small>{activeCoin.note}</small>
+            </div>
           </div>
 
           <div className="walletFormGrid">
@@ -673,13 +735,13 @@ function Wallet() {
             <label>
               <span>{t.cryptoCoin}</span>
               <select
-                value={selectedCoin}
-                onChange={(e) => setSelectedCoin(e.target.value)}
+                value={selectedCoinValue}
+                onChange={(e) => setSelectedCoinValue(e.target.value)}
                 disabled={isCreating}
               >
                 {cryptoCoins.map((coin) => (
                   <option value={coin.value} key={coin.value}>
-                    {coin.label} {coin.enabled ? "· Live" : `· ${t.comingSoon}`}
+                    {coin.label} · {coin.network}
                   </option>
                 ))}
               </select>
@@ -696,7 +758,18 @@ function Wallet() {
               />
             </label>
 
-            <label>
+            <label className="walletFormWide">
+              <span>{t.txidRequired}</span>
+              <input
+                type="text"
+                placeholder={t.txidPlaceholder}
+                value={txid}
+                onChange={(e) => setTxid(e.target.value)}
+                disabled={isCreating}
+              />
+            </label>
+
+            <label className="walletFormWide">
               <span>{t.noteOptional}</span>
               <input
                 type="text"
@@ -709,45 +782,33 @@ function Wallet() {
           </div>
 
           <div className="walletMethodPreview">
-            <div className={`walletMethodBadge ${activeMethod.brandClass}`}>
-              <PaymentLogo method={activeMethod} />
+            <div className="walletMethodBadge">
+              <CryptoLogo coin={activeCoin} />
             </div>
 
             <div>
-              <span>{t.backupMethod}</span>
-              <strong>{activeMethod.description}</strong>
-              <p>{t.cryptoLong}</p>
+              <span>{t.directPayment}</span>
+              <strong>
+                {activeCoin.label} · {activeCoin.network}
+              </strong>
+              <p>{activeCoin.note}</p>
             </div>
           </div>
 
           <div className="walletDepositPreview" title={currencyRateText}>
             <div>
               <span>{t.paymentPreview}</span>
-              <small>
-                {t.manualPreview} {selectedCurrency}.
-              </small>
+              <small>{t.manualPreview}</small>
             </div>
 
             <strong>{formatMoney(previewAmount)}</strong>
           </div>
 
           <button className="walletCreateBtn" type="submit" disabled={isCreating}>
-            {isCreating
-              ? t.creatingRequest
-              : `${t.createRequest} ${activeMethod.label} ${t.request}`}
+            {isCreating ? t.creatingRequest : t.createRequest}
           </button>
 
-          <p
-            style={{
-              margin: "14px 0 0",
-              color: "#8fa4c2",
-              fontSize: "12px",
-              fontWeight: 800,
-              lineHeight: 1.5,
-            }}
-          >
-            {t.currencyInfo}
-          </p>
+          <p className="walletCurrencyInfo">{t.currencyInfo}</p>
         </form>
 
         <aside className="walletPanel walletGuidePanel">
@@ -842,7 +903,7 @@ function Wallet() {
                         {item.status || "pending"}
                       </span>
                     </td>
-                    <td>{item.info || "-"}</td>
+                    <td title={item.info}>{shortenText(item.info, 28, 16)}</td>
                     <td>{formatDate(item.createdAt)}</td>
                   </tr>
                 ))}
