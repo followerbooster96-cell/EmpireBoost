@@ -1,23 +1,37 @@
 .walletPagePro {
   position: relative;
-  min-height: calc(100vh - 78px);
-  overflow-x: hidden;
+  min-height: calc(100svh - 78px);
+  height: auto;
+  width: 100%;
+  overflow-x: clip;
   overflow-y: visible;
   padding: 86px 28px 110px;
+  display: block;
   background:
     radial-gradient(circle at 12% 8%, rgba(37, 99, 235, 0.14), transparent 34%),
     radial-gradient(circle at 88% 18%, rgba(14, 165, 233, 0.1), transparent 32%),
+    radial-gradient(circle at 50% 100%, rgba(79, 70, 229, 0.12), transparent 35%),
     linear-gradient(180deg, #04070d 0%, #06101b 46%, #05070d 100%);
   isolation: isolate;
-  touch-action: pan-y;
-  overscroll-behavior-y: auto;
+}
+
+.walletPagePro,
+.walletPagePro * {
+  box-sizing: border-box;
+}
+
+.walletPagePro button,
+.walletPagePro a,
+.walletPagePro input,
+.walletPagePro select {
+  touch-action: manipulation;
 }
 
 .walletPagePro::before {
   content: "";
   position: absolute;
   inset: 0;
-  z-index: -6;
+  z-index: -8;
   pointer-events: none;
   background-image:
     linear-gradient(rgba(96, 165, 250, 0.042) 1px, transparent 1px),
@@ -31,7 +45,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  z-index: -5;
+  z-index: -7;
   pointer-events: none;
   background:
     radial-gradient(circle at 20% 24%, rgba(56, 189, 248, 0.08), transparent 27%),
@@ -43,7 +57,8 @@
 }
 
 @keyframes walletSurfaceFlow {
-  0% {
+  0%,
+  100% {
     opacity: 0.58;
     transform: translate3d(0, 0, 0) scale(1);
   }
@@ -52,17 +67,12 @@
     opacity: 0.95;
     transform: translate3d(0, -14px, 0) scale(1.03);
   }
-
-  100% {
-    opacity: 0.58;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
 }
 
 .walletAurora {
   position: absolute;
   inset: -16%;
-  z-index: -4;
+  z-index: -6;
   pointer-events: none;
   overflow: hidden;
   filter: blur(62px);
@@ -132,7 +142,8 @@
 }
 
 @keyframes walletAuroraOne {
-  0% {
+  0%,
+  100% {
     opacity: 0.48;
     transform: translate3d(-3%, 0, 0) rotate(-7deg) scale(1);
   }
@@ -141,15 +152,11 @@
     opacity: 0.84;
     transform: translate3d(10%, 5%, 0) rotate(-3deg) scale(1.08);
   }
-
-  100% {
-    opacity: 0.48;
-    transform: translate3d(-3%, 0, 0) rotate(-7deg) scale(1);
-  }
 }
 
 @keyframes walletAuroraTwo {
-  0% {
+  0%,
+  100% {
     opacity: 0.44;
     transform: translate3d(0, 0, 0) rotate(8deg) scale(1);
   }
@@ -158,15 +165,11 @@
     opacity: 0.78;
     transform: translate3d(-10%, -4%, 0) rotate(4deg) scale(1.06);
   }
-
-  100% {
-    opacity: 0.44;
-    transform: translate3d(0, 0, 0) rotate(8deg) scale(1);
-  }
 }
 
 @keyframes walletAuroraThree {
-  0% {
+  0%,
+  100% {
     opacity: 0.4;
     transform: translate3d(0, 0, 0) rotate(-5deg) scale(1);
   }
@@ -175,15 +178,11 @@
     opacity: 0.74;
     transform: translate3d(8%, -6%, 0) rotate(-1deg) scale(1.08);
   }
-
-  100% {
-    opacity: 0.4;
-    transform: translate3d(0, 0, 0) rotate(-5deg) scale(1);
-  }
 }
 
 @keyframes walletAuroraFour {
-  0% {
+  0%,
+  100% {
     opacity: 0.32;
     transform: translate3d(0, 0, 0) rotate(6deg) scale(1);
   }
@@ -191,11 +190,6 @@
   50% {
     opacity: 0.68;
     transform: translate3d(-8%, 5%, 0) rotate(2deg) scale(1.07);
-  }
-
-  100% {
-    opacity: 0.32;
-    transform: translate3d(0, 0, 0) rotate(6deg) scale(1);
   }
 }
 
@@ -560,7 +554,8 @@
 }
 
 @keyframes walletPulse {
-  0% {
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
@@ -568,11 +563,6 @@
   50% {
     opacity: 0.55;
     transform: scale(1.35);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
   }
 }
 
@@ -606,16 +596,13 @@
 }
 
 @keyframes walletTitleShine {
-  0% {
+  0%,
+  100% {
     background-position: 0% 50%;
   }
 
   50% {
     background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
   }
 }
 
@@ -1468,12 +1455,12 @@
 .walletDepositsTableWrap {
   position: relative;
   z-index: 2;
-  overflow-x: auto;
-  overflow-y: hidden;
   border-radius: 24px;
   border: 1px solid rgba(147, 197, 253, 0.12);
   background:
     linear-gradient(135deg, rgba(2, 6, 23, 0.88), rgba(15, 23, 42, 0.66));
+  overflow-x: auto;
+  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -1622,20 +1609,97 @@
 @media (max-width: 720px) {
   .walletPagePro {
     min-height: auto;
-    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+    height: auto;
+    padding: 78px 12px max(112px, calc(86px + env(safe-area-inset-bottom)));
+    overflow: visible;
+    overflow-x: clip;
     overflow-y: visible;
-    padding: 78px 18px 96px;
-    touch-action: pan-y;
+    isolation: auto;
+    touch-action: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .walletPagePro::before,
+  .walletPagePro::after {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .walletAurora,
+  .walletFloatingLayer {
+    display: none;
+  }
+
+  .walletHeroPro,
+  .walletStatsGrid,
+  .walletMainGrid,
+  .walletDepositsPanel {
+    width: 100%;
+    max-width: 430px;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: visible;
+    touch-action: auto;
+  }
+
+  .walletHeroPro,
+  .walletMainGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .walletStatsGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .walletHeroContent,
+  .walletBalanceCard,
+  .walletStatCard,
+  .walletPanel {
+    width: 100%;
+    max-width: 430px;
+    border-radius: 28px;
+    overflow: hidden;
+    transform: none !important;
+    transition:
+      border-color 0.22s ease,
+      box-shadow 0.22s ease,
+      filter 0.22s ease;
+  }
+
+  .walletHeroContent:hover,
+  .walletBalanceCard:hover,
+  .walletStatCard:hover,
+  .walletPanel:hover,
+  .walletMethodOption:hover,
+  .walletSteps div:hover,
+  .walletPrimaryBtn:hover,
+  .walletSecondaryBtn:hover,
+  .walletCreateBtn:hover {
+    transform: none !important;
+  }
+
+  .walletHeroContent::before,
+  .walletBalanceCard::before,
+  .walletStatCard::before,
+  .walletPanel::before {
+    display: none;
   }
 
   .walletHeroContent {
     min-height: auto;
     padding: 28px;
-    border-radius: 28px;
   }
 
   .walletHeroContent h1 {
     font-size: 42px;
+    line-height: 0.98;
     letter-spacing: -1.8px;
   }
 
@@ -1654,7 +1718,6 @@
 
   .walletBalanceCard,
   .walletPanel {
-    border-radius: 28px;
     padding: 22px;
   }
 
@@ -1662,13 +1725,9 @@
     font-size: 42px;
   }
 
-  .walletStatsGrid {
-    grid-template-columns: 1fr;
-  }
-
   .walletStatCard {
-    border-radius: 24px;
     min-height: 138px;
+    padding: 22px;
   }
 
   .walletPanelHeader {
@@ -1681,6 +1740,7 @@
 
   .walletMethodOption {
     min-height: 142px;
+    transform: none !important;
   }
 
   .walletRealLogo {
@@ -1697,40 +1757,133 @@
     flex-direction: column;
   }
 
-  .walletHeroContent:hover,
-  .walletBalanceCard:hover,
-  .walletStatCard:hover,
-  .walletPanel:hover,
-  .walletMethodOption:hover,
-  .walletSteps div:hover,
-  .walletPrimaryBtn:hover,
-  .walletSecondaryBtn:hover,
-  .walletCreateBtn:hover {
-    transform: none;
-  }
-
-  .walletFloatingLayer {
-    opacity: 0.36;
-  }
-
   .walletDepositsTableWrap {
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow: visible;
+    border: 0;
+    background: transparent;
+    border-radius: 0;
+  }
+
+  .walletDepositsTable,
+  .walletDepositsTable thead,
+  .walletDepositsTable tbody,
+  .walletDepositsTable th,
+  .walletDepositsTable td,
+  .walletDepositsTable tr {
+    display: block;
+    width: 100%;
+    min-width: 0;
   }
 
   .walletDepositsTable {
-    min-width: 760px;
+    min-width: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .walletDepositsTable thead {
+    display: none;
+  }
+
+  .walletDepositsTable tbody {
+    display: grid;
+    gap: 12px;
+  }
+
+  .walletDepositsTable tr {
+    padding: 14px;
+    border-radius: 22px;
+    background:
+      radial-gradient(circle at 0% 0%, rgba(96, 165, 250, 0.1), transparent 38%),
+      linear-gradient(145deg, rgba(2, 6, 23, 0.9), rgba(15, 23, 42, 0.7));
+    border: 1px solid rgba(147, 197, 253, 0.12);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.035),
+      0 14px 34px rgba(0, 0, 0, 0.2);
+  }
+
+  .walletDepositsTable td {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(147, 197, 253, 0.08);
+    color: #dbeafe;
+    overflow-wrap: anywhere;
+  }
+
+  .walletDepositsTable td:last-child {
+    border-bottom: 0;
+  }
+
+  .walletDepositsTable td:nth-child(1)::before {
+    content: "Provider";
+  }
+
+  .walletDepositsTable td:nth-child(2)::before {
+    content: "Reference";
+  }
+
+  .walletDepositsTable td:nth-child(3)::before {
+    content: "Amount";
+  }
+
+  .walletDepositsTable td:nth-child(4)::before {
+    content: "Display";
+  }
+
+  .walletDepositsTable td:nth-child(5)::before {
+    content: "Status";
+  }
+
+  .walletDepositsTable td:nth-child(6)::before {
+    content: "Info";
+  }
+
+  .walletDepositsTable td:nth-child(7)::before {
+    content: "Date";
+  }
+
+  .walletDepositsTable td::before {
+    color: #93c5fd;
+    font-size: 10px;
+    font-weight: 950;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
   }
 }
 
 @media (max-width: 480px) {
   .walletPagePro {
-    padding: 72px 14px 90px;
+    padding: 72px 10px max(124px, calc(96px + env(safe-area-inset-bottom)));
+  }
+
+  .walletHeroPro,
+  .walletStatsGrid,
+  .walletMainGrid,
+  .walletDepositsPanel {
+    max-width: 100%;
+  }
+
+  .walletHeroContent,
+  .walletBalanceCard,
+  .walletStatCard,
+  .walletPanel {
+    max-width: 100%;
+    border-radius: 24px;
+  }
+
+  .walletHeroContent,
+  .walletBalanceCard,
+  .walletPanel {
+    padding: 18px;
   }
 
   .walletHeroContent h1 {
     font-size: 36px;
-    line-height: 0.98;
+    line-height: 1;
+    letter-spacing: -1.3px;
   }
 
   .walletBadgePro {
@@ -1750,114 +1903,13 @@
     font-size: 28px;
   }
 
-  .walletFloatingLayer {
-    display: none;
-  }
-}
-/* =========================
-   WALLET HARD SCROLL FIX
-   paste at VERY BOTTOM of Wallet.css
-========================= */
-
-.walletPagePro {
-  overflow: visible !important;
-  overflow-x: hidden !important;
-  overflow-y: visible !important;
-  height: auto !important;
-  min-height: calc(100vh - 78px) !important;
-  touch-action: auto !important;
-  overscroll-behavior: auto !important;
-  -webkit-overflow-scrolling: touch !important;
-}
-
-/* Background effects must never block scroll/touch */
-.walletAurora,
-.walletFloatingLayer,
-.walletPagePro::before,
-.walletPagePro::after,
-.walletBalanceGlow,
-.walletPanel::before,
-.walletHeroContent::before,
-.walletBalanceCard::before,
-.walletStatCard::before {
-  pointer-events: none !important;
-}
-
-/* Real content must stay above background and normal scroll flow */
-.walletHeroPro,
-.walletStatsGrid,
-.walletMainGrid,
-.walletDepositsPanel {
-  position: relative !important;
-  z-index: 5 !important;
-  overflow: visible !important;
-}
-
-/* Panels can hide their internal shine, but should not lock page scroll */
-.walletHeroContent,
-.walletBalanceCard,
-.walletStatCard,
-.walletPanel {
-  overflow: hidden !important;
-}
-
-/* Table only scrolls sideways when finger is on the table */
-.walletDepositsTableWrap {
-  overflow-x: auto !important;
-  overflow-y: hidden !important;
-  max-width: 100% !important;
-  -webkit-overflow-scrolling: touch !important;
-  touch-action: pan-x !important;
-}
-
-/* But normal wallet page should always scroll vertically */
-.walletPagePro,
-.walletHeroPro,
-.walletStatsGrid,
-.walletMainGrid,
-.walletDepositsPanel,
-.walletDepositPanel,
-.walletGuidePanel {
-  touch-action: pan-y !important;
-}
-
-/* Desktop keeps premium hover */
-@media (min-width: 721px) {
-  .walletHeroContent:hover,
-  .walletBalanceCard:hover,
-  .walletStatCard:hover,
-  .walletPanel:hover {
-    transform: translateY(-4px);
+  .walletDepositsTable td {
+    grid-template-columns: 82px minmax(0, 1fr);
+    font-size: 12px;
   }
 }
 
-/* Mobile: remove hover/transform glitches completely */
-@media (max-width: 720px) {
-  .walletPagePro {
-    overflow: visible !important;
-    overflow-x: hidden !important;
-    overflow-y: visible !important;
-    height: auto !important;
-    min-height: auto !important;
-    padding-top: 78px !important;
-    padding-bottom: 110px !important;
-    touch-action: pan-y !important;
-    overscroll-behavior-y: auto !important;
-  }
-
-  .walletHeroContent,
-  .walletBalanceCard,
-  .walletStatCard,
-  .walletPanel,
-  .walletMethodOption,
-  .walletSteps div,
-  .walletPrimaryBtn,
-  .walletSecondaryBtn,
-  .walletCreateBtn {
-    transform: none !important;
-    will-change: auto !important;
-  }
-
+@media (hover: none) and (pointer: coarse) {
   .walletHeroContent:hover,
   .walletBalanceCard:hover,
   .walletStatCard:hover,
@@ -1868,31 +1920,22 @@
   .walletSecondaryBtn:hover,
   .walletCreateBtn:hover {
     transform: none !important;
-    filter: none !important;
+    filter: none;
   }
 
-  .walletFloatingLayer {
-    display: none !important;
+  .walletHeroContent::before,
+  .walletBalanceCard::before,
+  .walletStatCard::before,
+  .walletPanel::before {
+    display: none;
   }
 
-  .walletAurora {
-    opacity: 0.45 !important;
-  }
-
-  .walletDepositsTableWrap {
-    touch-action: pan-x !important;
-  }
-
-  .walletDepositsTable {
-    min-width: 760px !important;
-  }
-}
-
-/* Very small phones */
-@media (max-width: 480px) {
-  .walletPagePro {
-    padding-left: 14px !important;
-    padding-right: 14px !important;
-    padding-bottom: 120px !important;
+  .walletPagePro,
+  .walletHeroPro,
+  .walletStatsGrid,
+  .walletMainGrid,
+  .walletDepositsPanel {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
 }
