@@ -4,6 +4,9 @@ import useCurrency from "../lib/useCurrency.js";
 import { getStoredLanguage } from "../lib/language.js";
 import "./Wallet.css";
 
+const telegramLink = "https://t.me/EmpireBooster";
+const supportEmail = "followerbooster96@gmail.com";
+
 const CRYPTO_WALLETS = [
   {
     value: "LTC",
@@ -103,7 +106,6 @@ const WALLET_TRANSLATIONS = {
 
     addFundsPanel: "Add funds",
     payWithCrypto: "Manual crypto payment",
-    chooseCoin: "Choose coin",
     live: "Live",
     directPayment: "Direct wallet payment",
     topupAmount: "Top-up amount",
@@ -135,6 +137,19 @@ const WALLET_TRANSLATIONS = {
     couldNotCreatePayment: "Could not create crypto deposit request.",
     currencyInfo:
       "Wallet accounting stays in EUR. Crypto payments are checked manually by transaction hash.",
+
+    comingSoonTitle: "More payment methods",
+    comingSoonText:
+      "Apple Pay and Google Pay are planned for later. Crypto is live first because it is the safest direct option right now.",
+    applePay: "Apple Pay",
+    googlePay: "Google Pay",
+    soon: "Coming soon",
+
+    contactTitle: "Need help?",
+    contactText:
+      "If you are unsure about the network, TXID or payment status, contact us before sending money.",
+    telegram: "Telegram",
+    email: "Email",
 
     paymentGuide: "Payment guide",
     howItWorks: "How it works",
@@ -200,7 +215,6 @@ const WALLET_TRANSLATIONS = {
 
     addFundsPanel: "Guthaben aufladen",
     payWithCrypto: "Manuelle Crypto-Zahlung",
-    chooseCoin: "Coin wählen",
     live: "Live",
     directPayment: "Direkte Wallet-Zahlung",
     topupAmount: "Aufladebetrag",
@@ -232,6 +246,19 @@ const WALLET_TRANSLATIONS = {
     couldNotCreatePayment: "Crypto Deposit-Anfrage konnte nicht erstellt werden.",
     currencyInfo:
       "Wallet-Buchhaltung bleibt in EUR. Crypto-Zahlungen werden manuell per Transaction Hash geprüft.",
+
+    comingSoonTitle: "Weitere Zahlungsmethoden",
+    comingSoonText:
+      "Apple Pay und Google Pay sind für später geplant. Crypto ist zuerst live, weil es aktuell die sicherste direkte Option ist.",
+    applePay: "Apple Pay",
+    googlePay: "Google Pay",
+    soon: "Kommt bald",
+
+    contactTitle: "Brauchst du Hilfe?",
+    contactText:
+      "Wenn du beim Netzwerk, TXID oder Zahlungsstatus unsicher bist, kontaktiere uns vor der Zahlung.",
+    telegram: "Telegram",
+    email: "E-Mail",
 
     paymentGuide: "Zahlungsanleitung",
     howItWorks: "So funktioniert es",
@@ -316,6 +343,21 @@ function CryptoLogo({ coin }) {
     <div className={`walletCryptoLogoReal ${coin.tone}`} aria-hidden="true">
       <span className="walletCryptoLogoSymbol">{coin.symbol}</span>
       <span className="walletCryptoLogoText">{coin.label}</span>
+    </div>
+  );
+}
+
+function ComingSoonPayCard({ type, title, label }) {
+  return (
+    <div className={`walletSoonPayCard walletSoonPayCard-${type}`}>
+      <div className="walletSoonPayIcon">
+        {type === "apple" ? "" : "G"}
+      </div>
+
+      <div>
+        <strong>{title}</strong>
+        <span>{label}</span>
+      </div>
     </div>
   );
 }
@@ -713,6 +755,18 @@ function Wallet() {
             </div>
           </div>
 
+          <div className="walletComingSoonBox">
+            <div className="walletComingSoonText">
+              <span>{t.comingSoonTitle}</span>
+              <p>{t.comingSoonText}</p>
+            </div>
+
+            <div className="walletComingSoonMethods">
+              <ComingSoonPayCard type="apple" title={t.applePay} label={t.soon} />
+              <ComingSoonPayCard type="google" title={t.googlePay} label={t.soon} />
+            </div>
+          </div>
+
           <div className="walletFormGrid">
             <label>
               <span>{t.topupAmount}</span>
@@ -844,6 +898,30 @@ function Wallet() {
               <b>04</b>
               <strong>{t.stepFourTitle}</strong>
               <span>{t.stepFourText}</span>
+            </div>
+          </div>
+
+          <div className="walletHelpBox">
+            <div className="walletHelpHeader">
+              <span>?</span>
+              <div>
+                <strong>{t.contactTitle}</strong>
+                <p>{t.contactText}</p>
+              </div>
+            </div>
+
+            <div className="walletHelpActions">
+              <a href={telegramLink} target="_blank" rel="noreferrer">
+                <span>✈</span>
+                {t.telegram}
+                <small>@EmpireBooster</small>
+              </a>
+
+              <a href={`mailto:${supportEmail}`}>
+                <span>✉</span>
+                {t.email}
+                <small>{supportEmail}</small>
+              </a>
             </div>
           </div>
         </aside>
