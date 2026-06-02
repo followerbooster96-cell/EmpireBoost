@@ -41,7 +41,7 @@ const coinNetworks = {
 
 const createPaymentReference = () => {
   const random = Math.random().toString(36).substring(2, 8).toUpperCase();
-  return `EB-${random}`;
+  return `EB${random}`;
 };
 
 const formatAmount = (value) => {
@@ -449,7 +449,7 @@ router.post("/coinremitter/create-invoice", protect, async (req, res) => {
       fail_url:
         process.env.COINREMITTER_CANCEL_URL ||
         `${clientUrl}/wallet?deposit=cancel`,
-      description: `Topup ${paymentReference}`,
+      description: "",
       custom_data1: paymentReference,
       custom_data2: String(req.user._id),
     };
@@ -684,11 +684,13 @@ router.put("/admin/:id/approve", protect, adminOnly, async (req, res) => {
       success: true,
       message: "Deposit approved successfully",
       deposit: populatedDeposit,
-      user: {
-        id: result.user._id,
-        email: result.user.email,
-        balance: result.user.balance,
-      },
+      user: result.user
+        ? {
+            id: result.user._id,
+            email: result.user.email,
+            balance: result.user.balance,
+          }
+        : null,
     });
   } catch (error) {
     res.status(error.status || 500).json({
