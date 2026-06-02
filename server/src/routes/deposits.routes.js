@@ -436,7 +436,7 @@ router.post("/coinremitter/create-invoice", protect, async (req, res) => {
 
     const invoiceParams = {
       amount: String(formatAmount(numericAmount)),
-      name: `EmpireBoost ${cleanCoin}`,
+      name: `EB ${cleanCoin}`,
       email: req.user.email || "",
       fiat_currency: "EUR",
       expiry_time_in_minutes: "60",
@@ -449,12 +449,20 @@ router.post("/coinremitter/create-invoice", protect, async (req, res) => {
       fail_url:
         process.env.COINREMITTER_CANCEL_URL ||
         `${clientUrl}/wallet?deposit=cancel`,
-      description: `Wallet top-up ${paymentReference}`,
+      description: `Topup ${paymentReference}`,
       custom_data1: paymentReference,
       custom_data2: String(req.user._id),
     };
 
+    console.log("CoinRemitter invoice params:", {
+      ...invoiceParams,
+      email: req.user.email ? "user-email-present" : "missing-email",
+      custom_data2: "hidden-user-id",
+    });
+
     const invoice = await wallet.createInvoice(invoiceParams);
+
+    console.log("CoinRemitter invoice response:", invoice);
 
     if (!invoice || invoice.success === false || !invoice.data?.url) {
       return res.status(400).json({
@@ -506,9 +514,13 @@ router.post("/coinremitter/create-invoice", protect, async (req, res) => {
       },
     });
   } catch (error) {
+    console.error("CoinRemitter create invoice error:", error);
+
     res.status(error.status || 500).json({
       success: false,
-      message: error.message || "Create crypto invoice error",
+      message: `CoinRemitter invoice error: ${
+        error.message || "Create crypto invoice error"
+      }`,
     });
   }
 });
