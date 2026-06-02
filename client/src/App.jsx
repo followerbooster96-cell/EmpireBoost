@@ -84,6 +84,36 @@ const topbarFloatItems = [
   { className: "topbarFloatTwenty", icon: "↯", label: "Viral" },
 ];
 
+function unlockDocumentScroll() {
+  if (typeof document === "undefined") return;
+
+  document.body.classList.remove("empireMobileMenuLocked");
+
+  document.body.style.overflow = "";
+  document.body.style.overflowX = "";
+  document.body.style.overflowY = "";
+  document.body.style.position = "";
+  document.body.style.top = "";
+  document.body.style.left = "";
+  document.body.style.right = "";
+  document.body.style.width = "";
+  document.body.style.height = "";
+  document.body.style.touchAction = "";
+
+  document.documentElement.style.overflow = "";
+  document.documentElement.style.overflowX = "";
+  document.documentElement.style.overflowY = "";
+  document.documentElement.style.position = "";
+  document.documentElement.style.height = "";
+  document.documentElement.style.touchAction = "";
+}
+
+function lockDocumentScroll() {
+  if (typeof document === "undefined") return;
+
+  document.body.classList.add("empireMobileMenuLocked");
+}
+
 function getStoredUser() {
   try {
     const storedUser = localStorage.getItem("user");
@@ -185,10 +215,27 @@ function App() {
   useEffect(() => {
     setAdminOpen(false);
     setMobileMenuOpen(false);
-    document.body.classList.remove("empireMobileMenuLocked");
+    unlockDocumentScroll();
+
+    window.requestAnimationFrame(() => {
+      unlockDocumentScroll();
+    });
+
+    const firstUnlockTimer = window.setTimeout(() => {
+      unlockDocumentScroll();
+    }, 80);
+
+    const secondUnlockTimer = window.setTimeout(() => {
+      unlockDocumentScroll();
+    }, 250);
 
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  }, [location.pathname]);
+
+    return () => {
+      window.clearTimeout(firstUnlockTimer);
+      window.clearTimeout(secondUnlockTimer);
+    };
+  }, [location.pathname, location.search, location.hash]);
 
   useEffect(() => {
     refreshExchangeRates();
@@ -238,6 +285,29 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) {
+      unlockDocumentScroll();
+      return;
+    }
+
+    lockDocumentScroll();
+
+    return () => {
+      unlockDocumentScroll();
+    };
+  }, [mobileMenuOpen]);
+
+  useEffect(() => {
+    return () => {
+      unlockDocumentScroll();
+
+      if (adminCloseTimerRef.current) {
+        clearTimeout(adminCloseTimerRef.current);
+      }
+    };
+  }, []);
+
   const handleCurrencyChange = (event) => {
     const nextCurrency = saveStoredCurrency(event.target.value);
     setSelectedCurrency(nextCurrency);
@@ -256,7 +326,7 @@ function App() {
     setUser(null);
     setAdminOpen(false);
     setMobileMenuOpen(false);
-    document.body.classList.remove("empireMobileMenuLocked");
+    unlockDocumentScroll();
 
     navigate("/login", { replace: true });
   };
@@ -290,12 +360,29 @@ function App() {
   const closeMobileMenu = () => {
     setAdminOpen(false);
     setMobileMenuOpen(false);
-    document.body.classList.remove("empireMobileMenuLocked");
+    unlockDocumentScroll();
+
+    window.requestAnimationFrame(() => {
+      unlockDocumentScroll();
+    });
+
+    window.setTimeout(() => {
+      unlockDocumentScroll();
+    }, 120);
   };
 
   const toggleMobileMenu = () => {
     setAdminOpen(false);
-    setMobileMenuOpen((current) => !current);
+
+    setMobileMenuOpen((current) => {
+      if (current) {
+        unlockDocumentScroll();
+        return false;
+      }
+
+      lockDocumentScroll();
+      return true;
+    });
   };
 
   const goToSupportOrLogin = (event) => {
@@ -325,7 +412,7 @@ function App() {
       if (event.key === "Escape") {
         setAdminOpen(false);
         setMobileMenuOpen(false);
-        document.body.classList.remove("empireMobileMenuLocked");
+        unlockDocumentScroll();
       }
     };
 
@@ -343,21 +430,10 @@ function App() {
       if (adminCloseTimerRef.current) {
         clearTimeout(adminCloseTimerRef.current);
       }
+
+      unlockDocumentScroll();
     };
   }, []);
-
-  useEffect(() => {
-    if (!mobileMenuOpen) {
-      document.body.classList.remove("empireMobileMenuLocked");
-      return;
-    }
-
-    document.body.classList.add("empireMobileMenuLocked");
-
-    return () => {
-      document.body.classList.remove("empireMobileMenuLocked");
-    };
-  }, [mobileMenuOpen]);
 
   const navLinkClass = ({ isActive }) =>
     isActive ? "navItem navItemActive" : "navItem";
@@ -1147,6 +1223,7 @@ function MobileTopbarStyles() {
         body.empireMobileMenuLocked {
           overflow: hidden !important;
           touch-action: none !important;
+          overscroll-behavior: none !important;
         }
 
         @media (max-width: 760px) {
@@ -1163,7 +1240,19 @@ function MobileTopbarStyles() {
 
           body {
             position: static !important;
-            touch-action: auto !important;
+            touch-action: pan-y !important;
+            overflow-y: auto;
+          }
+
+          body.empireMobileMenuLocked {
+            overflow: hidden !important;
+            touch-action: none !important;
+            overscroll-behavior: none !important;
+          }
+
+          body:not(.empireMobileMenuLocked) {
+            overflow-y: auto !important;
+            touch-action: pan-y !important;
           }
 
           .empireAppShell {
