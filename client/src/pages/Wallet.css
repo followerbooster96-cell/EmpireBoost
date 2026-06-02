@@ -1,13 +1,16 @@
 .walletPagePro {
   position: relative;
   min-height: calc(100vh - 78px);
-  overflow: hidden;
-  padding: 86px 28px 92px;
+  overflow-x: hidden;
+  overflow-y: visible;
+  padding: 86px 28px 110px;
   background:
     radial-gradient(circle at 12% 8%, rgba(37, 99, 235, 0.14), transparent 34%),
     radial-gradient(circle at 88% 18%, rgba(14, 165, 233, 0.1), transparent 32%),
     linear-gradient(180deg, #04070d 0%, #06101b 46%, #05070d 100%);
   isolation: isolate;
+  touch-action: pan-y;
+  overscroll-behavior-y: auto;
 }
 
 .walletPagePro::before {
@@ -1466,10 +1469,12 @@
   position: relative;
   z-index: 2;
   overflow-x: auto;
+  overflow-y: hidden;
   border-radius: 24px;
   border: 1px solid rgba(147, 197, 253, 0.12);
   background:
     linear-gradient(135deg, rgba(2, 6, 23, 0.88), rgba(15, 23, 42, 0.66));
+  -webkit-overflow-scrolling: touch;
 }
 
 .walletDepositsTable {
@@ -1616,7 +1621,11 @@
 
 @media (max-width: 720px) {
   .walletPagePro {
-    padding: 64px 18px 70px;
+    min-height: auto;
+    overflow-x: hidden;
+    overflow-y: visible;
+    padding: 78px 18px 96px;
+    touch-action: pan-y;
   }
 
   .walletHeroContent {
@@ -1688,14 +1697,35 @@
     flex-direction: column;
   }
 
+  .walletHeroContent:hover,
+  .walletBalanceCard:hover,
+  .walletStatCard:hover,
+  .walletPanel:hover,
+  .walletMethodOption:hover,
+  .walletSteps div:hover,
+  .walletPrimaryBtn:hover,
+  .walletSecondaryBtn:hover,
+  .walletCreateBtn:hover {
+    transform: none;
+  }
+
   .walletFloatingLayer {
-    opacity: 0.45;
+    opacity: 0.36;
+  }
+
+  .walletDepositsTableWrap {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .walletDepositsTable {
+    min-width: 760px;
   }
 }
 
 @media (max-width: 480px) {
   .walletPagePro {
-    padding: 54px 14px 60px;
+    padding: 72px 14px 90px;
   }
 
   .walletHeroContent h1 {
@@ -1722,134 +1752,5 @@
 
   .walletFloatingLayer {
     display: none;
-  }
-}
-/* =========================
-   WALLET FINAL SCROLL FIX
-   paste at VERY BOTTOM of Wallet.css
-========================= */
-
-/* Do not lock the wallet page itself */
-.walletPagePro {
-  overflow-y: visible !important;
-  overflow-x: hidden !important;
-  height: auto !important;
-  min-height: calc(100vh - 78px) !important;
-  padding-bottom: 110px !important;
-  overscroll-behavior-y: auto !important;
-  touch-action: pan-y !important;
-}
-
-/* Background layers must never catch touch/scroll */
-.walletAurora,
-.walletFloatingLayer,
-.walletPagePro::before,
-.walletPagePro::after {
-  pointer-events: none !important;
-}
-
-/* Main content should stay normal document flow */
-.walletHeroPro,
-.walletStatsGrid,
-.walletMainGrid,
-.walletDepositsPanel,
-.walletPanel,
-.walletHeroContent,
-.walletBalanceCard,
-.walletStatCard {
-  overflow-anchor: none;
-}
-
-/* Table can scroll horizontally, but should not block vertical page scroll */
-.walletDepositsTableWrap {
-  max-width: 100%;
-  overflow-x: auto !important;
-  overflow-y: visible !important;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-x: contain;
-  touch-action: pan-x pan-y;
-}
-
-/* Inputs/buttons should behave normally on mobile */
-.walletFormGrid input,
-.walletFormGrid select,
-.walletMethodOption,
-.walletPrimaryBtn,
-.walletSecondaryBtn,
-.walletCreateBtn {
-  touch-action: manipulation;
-}
-
-/* Desktop keeps the old premium hover feeling */
-@media (min-width: 721px) {
-  .walletHeroContent:hover,
-  .walletBalanceCard:hover,
-  .walletStatCard:hover,
-  .walletPanel:hover {
-    transform: translateY(-4px);
-  }
-}
-
-/* Mobile: remove hover transforms because they can create scroll glitches */
-@media (max-width: 720px) {
-  .walletPagePro {
-    overflow-y: visible !important;
-    overflow-x: hidden !important;
-    min-height: auto !important;
-    padding-top: 78px !important;
-    padding-bottom: 96px !important;
-    touch-action: pan-y !important;
-  }
-
-  .walletHeroPro,
-  .walletStatsGrid,
-  .walletMainGrid,
-  .walletDepositsPanel {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  .walletHeroContent,
-  .walletBalanceCard,
-  .walletStatCard,
-  .walletPanel {
-    transform: none !important;
-    will-change: auto !important;
-  }
-
-  .walletHeroContent:hover,
-  .walletBalanceCard:hover,
-  .walletStatCard:hover,
-  .walletPanel:hover {
-    transform: none !important;
-  }
-
-  .walletMethodOption:hover,
-  .walletSteps div:hover,
-  .walletPrimaryBtn:hover,
-  .walletSecondaryBtn:hover,
-  .walletCreateBtn:hover {
-    transform: none !important;
-  }
-
-  .walletFloatingLayer {
-    pointer-events: none !important;
-    opacity: 0.32 !important;
-  }
-
-  .walletDepositsTable {
-    min-width: 760px;
-  }
-}
-
-@media (max-width: 480px) {
-  .walletPagePro {
-    padding-left: 14px !important;
-    padding-right: 14px !important;
-    padding-bottom: 90px !important;
-  }
-
-  .walletFloatingLayer {
-    display: none !important;
   }
 }
