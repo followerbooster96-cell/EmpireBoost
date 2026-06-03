@@ -8,6 +8,11 @@ import { OAuth2Client } from "google-auth-library";
 import User from "../models/User.js";
 import { protect } from "../middleware/auth.js";
 import { buildPasswordResetEmail, sendEmail } from "../utils/sendEmail.js";
+import {
+  buildLoginNotification,
+  buildRegisterNotification,
+  sendTelegramNotification,
+} from "../utils/telegram.js";
 
 const router = express.Router();
 
@@ -193,6 +198,14 @@ router.post("/register", authLimiter, verifyTurnstile, async (req, res) => {
 
     const token = generateToken(user._id);
 
+    void sendTelegramNotification(
+      buildRegisterNotification({
+        user,
+        req,
+        provider: "local",
+      })
+    );
+
     res.status(201).json({
       success: true,
       message: "User registered successfully",
@@ -250,6 +263,14 @@ router.post("/login", strictLoginLimiter, verifyTurnstile, async (req, res) => {
 
     const token = generateToken(user._id);
 
+    void sendTelegramNotification(
+      buildLoginNotification({
+        user,
+        req,
+        provider: "local",
+      })
+    );
+
     res.json({
       success: true,
       message: "Login successful",
@@ -281,8 +302,6 @@ router.post("/forgot-password", passwordResetLimiter, async (req, res) => {
 
     const user = await User.findOne({ email: cleanEmail });
 
-    // Important: same response even if user does not exist.
-    // This protects users from email enumeration.
     if (!user) {
       return res.json({
         success: true,
@@ -454,6 +473,7 @@ router.post("/google", authLimiter, verifyTurnstile, async (req, res) => {
     const cleanEmail = String(payload.email).toLowerCase().trim();
 
     let user = await User.findOne({ email: cleanEmail });
+    let isNewGoogleUser = false;
 
     if (!user) {
       user = await User.create({
@@ -466,6 +486,8 @@ router.post("/google", authLimiter, verifyTurnstile, async (req, res) => {
         resetPasswordToken: null,
         resetPasswordExpires: null,
       });
+
+      isNewGoogleUser = true;
     } else {
       let shouldSave = false;
 
@@ -499,6 +521,24 @@ router.post("/google", authLimiter, verifyTurnstile, async (req, res) => {
     }
 
     const token = generateToken(user._id);
+
+    if (isNewGoogleUser) {
+      void sendTelegramNotification(
+        buildRegisterNotification({
+          user,
+          req,
+          provider: "google",
+        })
+      );
+    } else {
+      void sendTelegramNotification(
+        buildLoginNotification({
+          user,
+          req,
+          provider: "google",
+        })
+      );
+    }
 
     res.json({
       success: true,

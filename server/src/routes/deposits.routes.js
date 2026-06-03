@@ -6,6 +6,10 @@ import Deposit from "../models/Deposit.js";
 import PromoCode from "../models/PromoCode.js";
 import Transaction from "../models/Transaction.js";
 import { protect, adminOnly } from "../middleware/auth.js";
+import {
+  buildDepositNotification,
+  sendTelegramNotification,
+} from "../utils/telegram.js";
 
 const require = createRequire(import.meta.url);
 const CoinRemitter = require("coinremitter-api");
@@ -498,6 +502,13 @@ router.post("/coinremitter/create-invoice", protect, async (req, res) => {
       adminNote: "",
     });
 
+    void sendTelegramNotification(
+      buildDepositNotification({
+        user: req.user,
+        deposit,
+      })
+    );
+
     res.status(201).json({
       success: true,
       message: "Crypto invoice created",
@@ -566,6 +577,13 @@ router.post("/", protect, async (req, res) => {
       status: "pending",
       adminNote: "",
     });
+
+    void sendTelegramNotification(
+      buildDepositNotification({
+        user: req.user,
+        deposit,
+      })
+    );
 
     res.status(201).json({
       success: true,

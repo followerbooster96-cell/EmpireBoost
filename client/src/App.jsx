@@ -354,7 +354,7 @@ function App() {
 
     adminCloseTimerRef.current = setTimeout(() => {
       setAdminOpen(false);
-    }, 180);
+    }, 220);
   };
 
   const closeMobileMenu = () => {
@@ -454,6 +454,9 @@ function App() {
         pointerEvents: "auto",
       }
     : {
+        opacity: 0,
+        visibility: "hidden",
+        transform: "translateY(8px) scale(0.97)",
         pointerEvents: "none",
       };
 
@@ -1224,6 +1227,97 @@ function MobileTopbarStyles() {
           overflow: hidden !important;
           touch-action: none !important;
           overscroll-behavior: none !important;
+        }
+
+        @media (min-width: 761px) {
+          .premiumNavbar,
+          .desktopNavbar,
+          .navlinks,
+          .premiumNavlinks {
+            overflow: visible !important;
+          }
+
+          .premiumNavbar {
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 999999 !important;
+            overflow: visible !important;
+          }
+
+          .premiumNavlinks {
+            position: relative !important;
+            z-index: 999999 !important;
+          }
+
+          .adminDropdown {
+            position: relative !important;
+            z-index: 1000000 !important;
+            overflow: visible !important;
+          }
+
+          .adminDropdownButton {
+            position: relative !important;
+            z-index: 1000001 !important;
+          }
+
+          .adminDropdownMenu {
+            position: absolute !important;
+            top: calc(100% + 10px) !important;
+            right: 0 !important;
+            z-index: 1000002 !important;
+
+            min-width: 250px !important;
+            padding: 10px !important;
+            border-radius: 20px !important;
+
+            display: grid !important;
+            gap: 7px !important;
+
+            background:
+              radial-gradient(circle at 20% 0%, rgba(96, 165, 250, 0.18), transparent 42%),
+              linear-gradient(145deg, rgba(5, 12, 25, 0.98), rgba(2, 6, 23, 0.96)) !important;
+
+            border: 1px solid rgba(147, 197, 253, 0.22) !important;
+
+            box-shadow:
+              0 28px 70px rgba(0, 0, 0, 0.58),
+              0 0 42px rgba(56, 189, 248, 0.13),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+
+            backdrop-filter: blur(18px) saturate(145%) !important;
+            -webkit-backdrop-filter: blur(18px) saturate(145%) !important;
+
+            transition:
+              opacity 0.18s ease,
+              visibility 0.18s ease,
+              transform 0.22s ease !important;
+          }
+
+          .adminDropdownOpen .adminDropdownMenu,
+          .adminDropdown:hover .adminDropdownMenu {
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+            transform: translateY(0) scale(1) !important;
+          }
+
+          .adminDropdownMenu::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: -14px;
+            height: 14px;
+            background: transparent;
+          }
+
+          .adminDropdownMenu .navItem {
+            width: 100% !important;
+            min-height: 42px !important;
+            justify-content: flex-start !important;
+            border-radius: 14px !important;
+            white-space: nowrap !important;
+          }
         }
 
         @media (max-width: 760px) {

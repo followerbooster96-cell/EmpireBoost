@@ -4,6 +4,10 @@ import Service from "../models/Service.js";
 import Order from "../models/Order.js";
 import Transaction from "../models/Transaction.js";
 import { protect } from "../middleware/auth.js";
+import {
+  buildOrderNotification,
+  sendTelegramNotification,
+} from "../utils/telegram.js";
 
 const router = express.Router();
 
@@ -71,6 +75,14 @@ router.post("/", protect, async (req, res) => {
       reference: order._id.toString(),
       description: `Order created for ${service.name}`,
     });
+
+    sendTelegramNotification(
+      buildOrderNotification({
+        user,
+        service,
+        order,
+      })
+    );
 
     res.status(201).json({
       success: true,

@@ -1,7 +1,12 @@
 import express from "express";
 
 import SupportTicket from "../models/SupportTicket.js";
+import User from "../models/User.js";
 import { protect, adminOnly } from "../middleware/auth.js";
+import {
+  buildSupportNotification,
+  sendTelegramNotification,
+} from "../utils/telegram.js";
 
 const router = express.Router();
 
@@ -30,6 +35,15 @@ router.post("/", protect, async (req, res) => {
         },
       ],
     });
+
+    const user = await User.findById(req.user._id);
+
+    sendTelegramNotification(
+      buildSupportNotification({
+        user,
+        ticket,
+      })
+    );
 
     res.status(201).json({
       success: true,
